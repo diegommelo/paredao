@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # paredao
 
 ## Project setup
@@ -27,3 +28,6 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+=======
+# paredap
+>>>>>>> 2bf1bbd799980b45136449217e03b938da00a1f8
