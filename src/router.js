@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
+import Paredao from './views/Main.vue'
 
 Vue.use(Router)
 
@@ -8,6 +9,14 @@ export default new Router({
   routes: [
     {
       path: '/',
+      name: 'paredao',
+      meta: {
+        title: 'Gerador de Paredões do BBB'
+      },
+      component: Paredao
+    },
+    {
+      path: '/sobre',
       name: 'home',
       component: Home
     },
