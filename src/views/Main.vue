@@ -1,6 +1,7 @@
 <template>
     <div>
-    <section v-if="" class="hero is-info is-bold is-fullheight">
+    <b-loading :is-full-page="isFullPage" :active.sync="isLoading" :can-cancel="true"></b-loading>      
+    <section v-if="paredaoCarregado" class="hero is-info is-bold is-fullheight">
       <div class="hero-body">
         <div class="container">
           <div class="brand">
@@ -21,10 +22,10 @@
                 <a class="button is-dark is-medium" v-on:click="comecaParedao(edicoes_escolhidas,participantes)"><i class="fas fa-cog" :class="{'fa-spin':carregando}"></i><span> Gerar</span></a> 
               </div>
           </div>
-          <div v-show="!start" class="conteudo animated faster slideInRight">
-            <div class="game">
-              <h3 v-if="campeao.length==0" class="title is-4 sombra-texto">Quem você quer eliminar?</h3>
-              <div class="paredao animated box" v-show="campeao.length==0">
+          <div v-show="!start" class="conteudo animated faster slideInLeft">
+            <div class="game" v-show="!isLoading">
+              <h3 v-if="campeao.length==0 && paredao.length>0" class="title is-4 sombra-texto">Quem você quer eliminar?</h3>
+              <div class="paredao animated box" v-show="campeao.length==0 && paredao.length>0 ">
                 <h4 v-if="restantes.length>2" class="title titulo-paredao">Paredão {{historico.length+1}}</h4>
                 <h4 v-if="restantes.length==2" class="title titulo-paredao">Final</h4>
                 <div class="columns is-mobile" v-if="paredao.length>0">
@@ -57,7 +58,7 @@
                 <div class="column box is-three-fifths is-offset-one-fifth" v-if='campeao.length>0'>
                     <h1 class="title titulo-paredao has-text-warning"><i class="fas fa-trophy"></i> Campeão <i class="fas fa-trophy"></i></h1>
                     <figure class="avatar">
-                      <img :src="'https://api.adorable.io/avatars/256/'+paredao[1].nome" /> 
+                      <img :src="'https://api.adorable.io/avatars/256/'+campeao[0].nome" /> 
                     </figure> 
                     <div class="campeao conteudo-card-paredao">
                       <p><strong>{{campeao[0].nome}}</strong></p>
@@ -66,45 +67,45 @@
                   </div>
               </div>
               <div v-show="campeao.length>0" class="historico" :class="{'bounceIn':campeao.length>0}">
-              <h4 class="sombra-texto" v-if="campeao.length>0">Histórico de Paredões</h4>
+                <h4 class="sombra-texto" v-if="campeao.length>0">Histórico de Paredões</h4>
                 <carousel>
-                  <slide v-for="(paredon,index) in historico">
-                    <h4 v-if="index==0">Final</h4>
-                    <h4 v-else>Paredão {{13-index}}</h4>
-                    <ul>
-                      <li>
-                        <!--<img :src="'https://api.adorable.io/avatars/256/'+paredon[0].nome" class="mini-avatar" :class="{eliminado:isVencedor(paredon[0],paredon)}" />-->
-                        <div class="conteudo-card-historico">
-                          <i v-if="isVencedor(paredon[0],paredon)" class="fas fa-crown"></i>
-                          <i v-else class="fas fa-times"></i>
-                          <h4 :class="{'riscado':!isVencedor(paredon[0],paredon)}">{{paredon[0].nome}}</h4>
-                          <small>(BBB {{paredon[0].edicao}})</small>        
-                        </div>                        
-                      </li>
-                      <li class="is-narrow versus">
-                        VS
-                      </li>
-                      <li>
-                        <!--<img :src="'https://api.adorable.io/avatars/256/'+paredon[1].nome" class="mini-avatar" :class="{eliminado:isVencedor(paredon[1],paredon)}"/>-->
-                        <div class="conteudo-card-historico">
-                          <i v-if="isVencedor(paredon[1],paredon)" class="fas fa-crown"></i>
-                          <i v-else class="fas fa-times"></i>                          
-                          <h4 :class="{'riscado':!isVencedor(paredon[1],paredon)}">{{paredon[1].nome}}</h4>
-                          <small>(BBB {{paredon[1].edicao}})</small>        
-                        </div>                        
-                      </li>
-                    </ul>                            
-                  </slide>
-                </carousel>
+                    <slide v-for="(paredon,index) in historico">
+                      <h4 v-if="index==0">Final</h4>
+                      <h4 v-else>Paredão {{13-index}}</h4>
+                      <ul>
+                        <li>
+                          <!--<img :src="'https://api.adorable.io/avatars/256/'+paredon[0].nome" class="mini-avatar" :class="{eliminado:isVencedor(paredon[0],paredon)}" />-->
+                          <div class="conteudo-card-historico">
+                            <i v-if="isVencedor(paredon[0],paredon)" class="fas fa-crown"></i>
+                            <i v-else class="fas fa-times"></i>
+                            <h4 :class="{'riscado':!isVencedor(paredon[0],paredon)}">{{paredon[0].nome}}</h4>
+                            <small>(BBB {{paredon[0].edicao}})</small>        
+                          </div>                        
+                        </li>
+                        <li class="is-narrow versus">
+                          VS
+                        </li>
+                        <li>
+                          <!--<img :src="'https://api.adorable.io/avatars/256/'+paredon[1].nome" class="mini-avatar" :class="{eliminado:isVencedor(paredon[1],paredon)}"/>-->
+                          <div class="conteudo-card-historico">
+                            <i v-if="isVencedor(paredon[1],paredon)" class="fas fa-crown"></i>
+                            <i v-else class="fas fa-times"></i>                          
+                            <h4 :class="{'riscado':!isVencedor(paredon[1],paredon)}">{{paredon[1].nome}}</h4>
+                            <small>(BBB {{paredon[1].edicao}})</small>        
+                          </div>                        
+                        </li>
+                      </ul>                            
+                    </slide>
+                  </carousel>
               </div>
               <hr class="divisor"></hr>
-              <div class="participantes" v-show="paredao.length>0">
+              <div class="participantes" v-show="!start">
                 <div class="columns">
                   <div class="column">
                     <div v-images-loaded="imageProgress">
                       <ul>
                         <h5 class="participantes-titulo sombra-texto">Participantes</h5>
-                        <li v-for="(bbb,key) in sorteados" :class="[{eliminado:isEliminado(bbb)}]">
+                        <li v-for="(bbb,key) in sorteados" :key="key" :class="[{eliminado:isEliminado(bbb)}]">
                           <b-tooltip :label="bbb.nome">
                             <img :src="'https://api.adorable.io/avatars/256/'+bbb.nome" />
                           </b-tooltip>
@@ -122,30 +123,19 @@
                   </div>                
                 </div>
               </div>
-            <!--  <div v-if='historico != ""' class="historico">-->
-            <!--    <div class="card" v-for="paredao in historico">-->
-            <!--     <p class="historico-eliminado" :class="{winner:isVencedor(paredao[0],paredao)}">-->
-            <!--     {{paredao[0].nome}}-->
-            <!--     </p>-->
-            <!--     <p>-->
-            <!--     x-->
-            <!--     </p>-->
-            <!--     <p class="historico-eliminado" :class="{winner:isVencedor(paredao[1],paredao)}">-->
-            <!--     {{paredao[1].nome}}-->
-            <!--     </p>-->
-            <!--  </div>              -->
-            <!--</div>-->
+              <a v-if="!start" class="button is-dark" v-on:click="resetaParedao">
+                <i class="fas fa-redo"></i><span> Novo Paredão</span>
+              </a>                
           </div>
-            <a v-if="!start" class="button is-dark" v-on:click="resetaParedao">
-              <i class="fas fa-redo"></i><span> Novo Paredão</span></a>            
           </div>
         </div>
       </div>
       <div class="hero-foot">
         <footer>
           feito com <i class="fas fa-heart"></i>por <span class="orange">@paulinha_v</span> e <span class="orange">@dieguitoo</span>
+          <p class="disclaimer">Este site não é afiliado a Globo ou a Endemol.<br/>  Todos os direitos reservados a seus respectivos proprietários.</p>
         </footer>        
-      </div>      
+      </div>    
     </section>
     </div>
 </template>
@@ -153,253 +143,13 @@
 <script>
 import imagesLoaded from 'vue-images-loaded'
 import { Carousel, Slide } from 'vue-carousel';
+import { db } from '../firebaseconfig'
 
 export default {
   name: 'Paredao',
   data: function() {
     return {
       bbbs: [],
-      edicoes: [[
-        { nome: "Kléber Bambam", edicao: 1 },
-        { nome: "Vanessa Pascale", edicao: 1 },
-        { nome: "André Carvalho", edicao: 1 },
-        { nome: "Sérgio Tavares", edicao: 1 },
-        { nome: "Alessandra Begliomini", edicao: 1 },
-        { nome: "Estela Padilha", edicao: 1 },
-        { nome: "Adriano de Castro", edicao: 1 },
-        { nome: "Helena Louro", edicao: 1 },
-        { nome: "Cristiana Mota", edicao: 1 },
-        { nome: "Bruno Saladini", edicao: 1 },
-        { nome: "Xaiane Dantas", edicao: 1 },
-        { nome: "Caetano Zonaro", edicao: 1 }
-        ],
-        [
-        { nome: "Rodrigo Leonel", edicao: 2 },
-        { nome: "Manuela Saadeh", edicao: 2 },
-        { nome: "Cida Junqueira", edicao: 2 },
-        { nome: "Thyrso Matos", edicao: 2 },
-        { nome: "Tarciana Lima", edicao: 2 },
-        { nome: "Fabricio Amaral", edicao: 2 },
-        { nome: "Thaís Ventura", edicao: 2 },
-        { nome: "Moisés Cruz", edicao: 2 },
-        { nome: "Jeferson dos Santos", edicao: 2 },
-        { nome: "Fernando Fernandes", edicao: 2 },
-        { nome: "Tina Soares", edicao: 2 },
-        { nome: "Rita Gonçalves", edicao: 2 }  ],
-        [      
-          { nome: "Dhomini", edicao: 3 },
-        { nome: "Elane Silva", edicao: 3 },
-        { nome: "Viviane Oliveira", edicao: 3 },
-        { nome: "Jean Massumi", edicao: 3 },  
-        { nome: "Harry Grossman", edicao: 3 },
-        { nome: "Sabrina Sato", edicao: 3 },
-        { nome: "Emílio Rodrigues", edicao: 3 },
-        { nome: "Alan Conceição", edicao: 3 },  
-        { nome: "Juliana Alves", edicao: 3 },
-        { nome: "Andrea Guerrero", edicao: 3 },
-        { nome: "Marcelo Kretzer", edicao: 3 },
-        { nome: "Joseane Oliveira", edicao: 3 },  
-        { nome: "Dilson Walkarez", edicao: 3 },
-        { nome: "Paulo Carotini", edicao: 3 },
-        { nome: "Samantha Pereira", edicao: 3 }],
-        [      
-          { nome: "Cida dos Santos", edicao: 4 },  
-        { nome: "Thiago Lira", edicao: 4 },
-        { nome: "Juliana Lopes", edicao: 4 },
-        { nome: "Solange Couto", edicao: 4 },
-        { nome: "Marcela Queiroz", edicao: 4 },  
-        { nome: "Rogério Dragone", edicao: 4 },
-        { nome: "Marcelo Dourado", edicao: 4 },
-        { nome: "Zulu Gomes", edicao: 4 },
-        { nome: "Edilson Buba", edicao: 4 },  
-        { nome: "Géris de Souza", edicao: 4 },
-        { nome: "Antonela Avellaneda", edicao: 4 },
-        { nome: "Cristiano Carnevale", edicao: 4 },
-        { nome: "Eduardo Monteiro", edicao: 4 },  
-        { nome: "Tatiana Giordano", edicao: 4 }   ],
-        [    
-        { nome: "Jean Wyllys", edicao: 5 },
-        { nome: "Grazielli Massafera", edicao: 5 },
-        { nome: "Sammy Ueda", edicao: 5 },  
-        { nome: "Alan Passos", edicao: 5 },
-        { nome: "Tatiane Pink", edicao: 5 },
-        { nome: "Karla Barbosa", edicao: 5 },
-        { nome: "Aline dos Santos", edicao: 5 },  
-        { nome: "Tatiana Machado", edicao: 5 },
-        { nome: "Natália Nara", edicao: 5 },
-        { nome: "Paulo André Costa", edicao: 5 },
-        { nome: "Rogério Padovan", edicao: 5 },        
-        { nome: "Giullianno Ciarelli", edicao: 5 },
-        { nome: "Marcos Maçaneiro", edicao: 5 },
-        { nome: "Marielza Santos", edicao: 5 },
-        { nome: "Juliana Brandão", edicao: 5 } ],
-        [    
-        { nome: "Mara Viana", edicao: 6 },
-        { nome: "Mariana Felício", edicao: 6 },
-        { nome: "Rafael Valente", edicao: 6 },  
-        { nome: "Agustinho Mendonça", edicao: 6 },
-        { nome: "Gustavo Borges", edicao: 6 },
-        { nome: "Iran Alves", edicao: 6 },
-        { nome: "Carlos Castello", edicao: 6 },  
-        { nome: "Inês Gomes", edicao: 6 },
-        { nome: "Thaís Macedo", edicao: 6 },
-        { nome: "Léa Ferreira", edicao: 6 },
-        { nome: "Roberta Brasil", edicao: 6 },        
-        { nome: "Daniel Saullo", edicao: 6 },
-        { nome: "Dan Costa", edicao: 6 },
-        { nome: "Juliana Canabarro", edicao: 6 } ],
-        [    
-        { nome: "Diego Gasques", edicao: 7 },
-        { nome: "Carollini Honório", edicao: 7 },
-        { nome: "Bruna Tavares", edicao: 7 },  
-        { nome: "Analy Rosa", edicao: 7 },
-        { nome: "Airton Cabral", edicao: 7 },
-        { nome: "Alberto Pimentel", edicao: 7 },
-        { nome: "Fani Pacheco", edicao: 7 },  
-        { nome: "Flavia Viana", edicao: 7 },
-        { nome: "Íris Stefanelli", edicao: 7 },
-        { nome: "Bruno Jácome", edicao: 7 },
-        { nome: "Fernando Luiz Bacalow", edicao: 7 },        
-        { nome: "Felipe Cobra", edicao: 7 },
-        { nome: "Alan Pierre Miranda", edicao: 7 },
-        { nome: "Liane de Souza", edicao: 7 },
-        { nome: "Daniel Belangero", edicao: 7 },
-        { nome: "Juliana Regueiro", edicao: 7 }],
-        [    
-        { nome: "Rafinha Ribeiro", edicao: 8 },
-        { nome: "Gyselle Soares", edicao: 8 },
-        { nome: "Natália Casassola", edicao: 8 },  
-        { nome: "Marcos Silva", edicao: 8 },
-        { nome: "Thatiana Bione", edicao: 8 },
-        { nome: "Marcelo Arantes", edicao: 8 },
-        { nome: "Juliana Góes", edicao: 8 },  
-        { nome: "Felipe Basílio", edicao: 8 },
-        { nome: "Fernando Mesquita", edicao: 8 },
-        { nome: "Bianca Jahara", edicao: 8 },
-        { nome: "Thalita Lippi", edicao: 8 },        
-        { nome: "Alexandre Scaquette", edicao: 8 },
-        { nome: "Rafael Memória", edicao: 8 },
-        { nome: "Jaqueline Khury", edicao: 8 }],
-        [    
-        { nome: "Maximiliano Porto", edicao: 9 },
-        { nome: "Priscila Pires", edicao: 9 },
-        { nome: "Francine Piaia", edicao: 9 },  
-        { nome: "Ana Carolina Madeira", edicao: 9 },
-        { nome: "Flávio Steffli", edicao: 9 },
-        { nome: "Josiane de Oliveira", edicao: 9 },
-        { nome: "Milena Fagundes", edicao: 9 },  
-        { nome: "Naiá Giannocaro", edicao: 9 },
-        { nome: "Maíra Cardi", edicao: 9 },
-        { nome: "Ralf Krause", edicao: 9 },
-        { nome: "Mirla Prado", edicao: 9 },        
-        { nome: "André de Almeida", edicao: 9 },
-        { nome: "Emanuel Milchevski", edicao: 9 },
-        { nome: "Newton Siqueira", edicao: 9 },
-        { nome: "Alexandre Gomes", edicao: 9 },        
-        { nome: "Leonardo Jancu", edicao: 9 },
-        { nome: "Norberto Carias", edicao: 9 },
-        { nome: "Michelle da Costa", edicao: 9 },
-        { nome: "Maíra Britto", edicao: 9 },
-        { nome: "Daniel Gevaerd", edicao: 9 } ],
-        [    
-        { nome: "Marcelo Dourado", edicao: 10 },
-        { nome: "Fernanda Cardoso", edicao: 10 },
-        { nome: "Cadu Parga", edicao: 10 },  
-        { nome: "Lia Kheireddine", edicao: 10 },
-        { nome: "Dicesar Ferreira", edicao: 10 },
-        { nome: "Anamara Brito", edicao: 10 },
-        { nome: "Sérgio Franceschini", edicao: 10 },  
-        { nome: "Michel Turtchin", edicao: 10 },
-        { nome: "Eliéser Ambrósio", edicao: 10 },
-        { nome: "Cláudia Colucci", edicao: 10 },
-        { nome: "Angélica Martins", edicao: 10 },        
-        { nome: "Elenita Rodrigues", edicao: 10 },
-        { nome: "Uilliam Cardoso", edicao: 10 },
-        { nome: "Alex Vilanova", edicao: 10 },
-        { nome: "Tessália Serighelli", edicao: 10 },        
-        { nome: "Ana Marcela Alves", edicao: 10 },
-        { nome: "Joseane Oliveira", edicao: 10 } ],
-        [    
-        { nome: "Maria Melillo", edicao: 11 },
-        { nome: "Wesley Schunk", edicao: 11 },
-        { nome: "Daniel Rolim", edicao: 11 },  
-        { nome: "Diana Balsini", edicao: 11 },
-        { nome: "Rodrigão Gomes", edicao: 11 },
-        { nome: "Paula Leite", edicao: 11 },
-        { nome: "Jaqueline Faria", edicao: 11 },  
-        { nome: "Maurício Joaquim", edicao: 11 },
-        { nome: "Talula Pascoli", edicao: 11 },
-        { nome: "Janaína dos Santos", edicao: 11 },
-        { nome: "Diogo Preto", edicao: 11 },        
-        { nome: "Adriana Sant'anna", edicao: 11 },
-        { nome: "Natália Castro", edicao: 11 },
-        { nome: "Lucival França", edicao: 11 },
-        { nome: "Cristiano Naya", edicao: 11 },        
-        { nome: "Igor Serra", edicao: 11 },
-        { nome: "Michelly Freitas", edicao: 11 },
-        { nome: "Rodrigo Carvalho", edicao: 11 },
-        { nome: "Ariadna Arantes", edicao: 11 }  ],
-        [    
-        { nome: "Fael Cordeiro", edicao: 12 },
-        { nome: "Fabiana Teixeira", edicao: 12 },
-        { nome: "Jonas Sulzbach", edicao: 12 },  
-        { nome: "Kelly Medeiros", edicao: 12 },
-        { nome: "João Carvalho", edicao: 12 },
-        { nome: "Monique Amin", edicao: 12 },
-        { nome: "Yuri Fernandes", edicao: 12 },  
-        { nome: "Renata Dávila", edicao: 12 },
-        { nome: "Rafa Oliveira", edicao: 12 },
-        { nome: "Laisa Portela", edicao: 12 },
-        { nome: "João Mauricio Dantas", edicao: 12 },        
-        { nome: "Ronaldo Peres", edicao: 12 },
-        { nome: "Mayara Medeiros", edicao: 12 },
-        { nome: "Jakeline Leal", edicao: 12 },
-        { nome: "Analice de Souza", edicao: 12 },        
-        { nome: "Daniel Echaniz", edicao: 12 }  ],
-        [    
-        { nome: "Fernanda Keulla", edicao: 13 },
-        { nome: "Nasser Rodrigues", edicao: 13 },
-        { nome: "Andressa Ganacin", edicao: 13 },  
-        { nome: "Natália Casassola", edicao: 13 },
-        { nome: "André Martinelli", edicao: 13 },
-        { nome: "Fani Pacheco", edicao: 13 },
-        { nome: "Kamilla Salgado", edicao: 13 },  
-        { nome: "Anamara Brito", edicao: 13 },
-        { nome: "Marcello Soares", edicao: 13 },
-        { nome: "Eliéser Ambrósio", edicao: 13 },
-        { nome: "Ivan Marcondes", edicao: 13 },        
-        { nome: "Marien Carretero", edicao: 13 },
-        { nome: "Yuri Fernandes", edicao: 13 },
-        { nome: "Aslan Cabral", edicao: 13 },
-        { nome: "Dhomini Ferreira", edicao: 13 },        
-        { nome: "Aline Mattos", edicao: 13 },
-        { nome: "Kleber Bambam", edicao: 13 },        
-        { nome: "André Coelho", edicao: 13 },
-        { nome: "Bernardo Lima", edicao: 13 },
-        { nome: "Kelly Baron", edicao: 13 },
-        { nome: "Samara Fonseca", edicao: 13 }],
-        [    
-        { nome: "Vanessa Mesquita", edicao: 14 },
-        { nome: "Angela Munhoz", edicao: 14 },
-        { nome: "Clara Aguilar", edicao: 14 },  
-        { nome: "Marcelo Zagonel", edicao: 14 },
-        { nome: "Valter Araújo", edicao: 14 },
-        { nome: "Tatiele Polyana", edicao: 14 },
-        { nome: "Cássio Lannes", edicao: 14 },  
-        { nome: "Diego Grossi", edicao: 14 },
-        { nome: "Aline Dahlen", edicao: 14 },
-        { nome: "Franciele Almeida", edicao: 14 },
-        { nome: "Roni Mazon", edicao: 14 },        
-        { nome: "Letícia Santiago", edicao: 14 },
-        { nome: "Junior Gianetti", edicao: 14 },
-        { nome: "Amanda Gontijo", edicao: 14 },
-        { nome: "Vagner Lara", edicao: 14 },        
-        { nome: "Bella Maia", edicao: 14 },
-        { nome: "Princy Cavalcante", edicao: 14 },        
-        { nome: "Rodrigo Lima", edicao: 14 },
-        { nome: "Alisson Gomes", edicao: 14 },
-        { nome: "João Almeida", edicao: 14 }]         
-        ],    
       sorteados:[],
       paredao:[],
       restantes:[],
@@ -412,9 +162,13 @@ export default {
       showcard2:true,
       elimanim1:false,
       elimanim2:false,
-      start:true,
+      start:false,
       showhistorico:false,
-      carregando:false
+      carregando:false,
+      shareId:"",
+      paredaoCarregado:{},
+      isLoading: true,
+      isFullPage: true
     }
   },  
   methods: {
@@ -442,7 +196,7 @@ export default {
       //this.paredao = []
       }
       if(this.restantes.length==1){
-      	this.campeao = this.restantes.slice(0)
+      	this.encerraParedao()
       } else {
         let el = this
         el.sorteiaParedao()
@@ -467,9 +221,9 @@ export default {
     },
     comecaParedao: function(edicoes,participantes){
       if(this.edicoes_escolhidas.length>0){
-      	let el = this._data
+      	let el = this
       	_.forEach(edicoes,function(edicao){
-        	_.forEach(el.edicoes[edicao-1],function(val){
+        	_.forEach(el.edicoesSalvas[edicao-1]['.value'],function(val){
           	el.bbbs.push(val)
           })
         })
@@ -496,25 +250,94 @@ export default {
       this.start = false
       this.carregando = false
       scroll(0,0)
-      console.log('kfjsalfj')
+      console.log('imgloaded')
     },
     resetaParedao: function(){
-      this.start=true
       this.restantes=[]
       this.campeao=[]
       this.historico=[]
+      this.edicoes_escolhidas=[]
+      this.paredao=[]
+      this.start = true
+      this.$router.push({name:'paredao'})
+    },
+    encerraParedao: function(){
+        var router = this.$router
+        console.log(router)
+        this.$firebaseRefs.paredoesSalvos.push({
+          campeao: this.restantes.slice(0),
+          edicoes_escolhidas:this.edicoes_escolhidas,
+          sorteados:this.sorteados,
+          historico:this.historico,
+          created_at:Date(Date.now())
+        }).then(function(docRef){
+          console.log(docRef)
+          router.push({name:'paredao',query:{p:docRef.key}})
+        })
+    },
+    carregaParedao: function(paredaoId){
+      this.$bindAsObject('paredaoCarregado', db.ref('paredoes').child(paredaoId), null, () => {
+        this.start = false        
+        this.sorteados = this.paredaoCarregado.sorteados
+        this.campeao = this.paredaoCarregado.campeao
+        this.edicoes_escolhidas = this.paredaoCarregado.edicoes_escolhidas
+        this.historico = this.paredaoCarregado.historico
+        this.campeao = this.paredaoCarregado.campeao
+        //this.paredao = this.paredaoCarregado.historico[0]
+        this.shareId = this.paredaoCarregado['.key']
+        this.isLoading = false
+      })
+
     }
   },
   created: function(){
-		//this.comecaParedao(this.edicoes_totais,this.participantes)
+    console.log('created')
+    if(this.$route.query.p==undefined){
+      this.start = true
+      this.isLoading = false
+    } else {
+      this.carregaParedao(this.$route.query.p)
+    }
 	},    
+	watch: {
+	  '$route' (to,from) {
+	    console.log('watch')
+	    if(to.query.p==undefined) {
+	      this.start = true
+        this.isLoading = false
+	    } else {
+	      this.carregaParedao(to.query.p)
+	    }
+	  },
+	  'paredaoCarregado' () {
+	    if(this.paredaoCarregado.hasOwnProperty('.value')) {
+	      console.log('ue')
+	      this.campeao = []
+	      this.paredao = []
+	      this.sorteados = []
+	      this.edicoes_escolhidas = []
+        this.$toast.open({
+            duration: 2000,
+            message: 'Paredão não encontrado',
+            position: 'is-bottom',
+            type: 'is-danger'
+        }) 	      
+        this.$router.push({name:'paredao'})
+	    }
+	  }
+	},
   components: {
     Carousel,
     Slide    
   },
   directives: {
     imagesLoaded,
-    
+  },
+  firebase: function(){
+    return {
+      edicoesSalvas: db.ref('edicoes'),
+      paredoesSalvos: db.ref('paredoes').limitToFirst(1),
+    }
   }
 }
 </script>
@@ -684,5 +507,10 @@ export default {
   }
   .orange {
     color:#99CC99;
+  }
+  .disclaimer {
+    margin-top:5px;
+    font-size:0.6rem;
+    color:#C0D6DF;
   }
 </style>

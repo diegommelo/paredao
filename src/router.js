@@ -6,6 +6,7 @@ import Paredao from './views/Main.vue'
 Vue.use(Router)
 
 export default new Router({
+  mode: 'history',
   routes: [
     {
       path: '/',
@@ -13,12 +14,7 @@ export default new Router({
       meta: {
         title: 'Gerador de Paredões do BBB'
       },
-      component: Paredao
-    },
-    {
-      path: '/sobre',
-      name: 'home',
-      component: Home
+      component: Paredao,
     },
     {
       path: '/about',

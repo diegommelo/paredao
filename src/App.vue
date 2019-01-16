@@ -20,8 +20,6 @@ body {
 }
 #app {
   margin: auto;
-  text-align:center;
-  
 }
 ul > li {
     display: inline-block;
@@ -30,5 +28,9 @@ ul > li {
     *display:inline;
     padding:3px;
     /* this fix is needed for IE7- */
+}
+
+#app {
+  text-align:center;
 }
 </style>
