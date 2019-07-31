@@ -32,7 +32,7 @@
                   <div class="column animated faster" :class="[!showcard1 ? elemanim1 : 'fadeInDown']" v-on:click="eliminaParedao(paredao[0],0)">
                     <div class="card-paredao">
                       <figure class="image avatar">
-                        <img :src="'https://api.adorable.io/avatars/256/'+paredao[0].nome" /> 
+                        <img :src="'img/fotos/'+paredao[0].foto+'.jpg'" /> 
                       </figure>      
                       <div class="conteudo-card-paredao">
                       <p><strong>{{paredao[0].nome}}</strong></p>
@@ -44,7 +44,7 @@
                   <div class="column animated faster" :class="[!showcard2 ? elemanim2 : 'fadeInDown']" v-on:click="eliminaParedao(paredao[1],1)">
                     <div class="card-paredao">
                         <figure class="image avatar">
-                          <img :src="'https://api.adorable.io/avatars/256/'+paredao[1].nome" /> 
+                          <img :src="'img/fotos/'+paredao[1].foto+'.jpg'" /> 
                         </figure> 
                         <div class="conteudo-card-paredao">
                           <h4><strong>{{paredao[1].nome}}</strong></h4>
@@ -58,7 +58,7 @@
                 <div class="column box is-three-fifths is-offset-one-fifth" v-if='campeao.length>0'>
                     <h1 class="title titulo-paredao has-text-warning"><i class="fas fa-trophy"></i> Campeão <i class="fas fa-trophy"></i></h1>
                     <figure class="avatar">
-                      <img :src="'https://api.adorable.io/avatars/256/'+campeao[0].nome" /> 
+                      <img :src="'img/fotos/'+campeao[0].foto+'.jpg'" /> 
                     </figure> 
                     <div class="campeao conteudo-card-paredao">
                       <p><strong>{{campeao[0].nome}}</strong></p>
@@ -67,18 +67,18 @@
                   </div>
               </div>
               <div v-show="campeao.length>0" class="historico" :class="{'bounceIn':campeao.length>0}">
-                <h4 class="sombra-texto" v-if="campeao.length>0">Histórico de Paredões</h4>
+                <h4 class="title is-5 sombra-texto" v-if="campeao.length>0">Histórico de Paredões</h4>
                 <carousel>
                     <slide v-for="(paredon,index) in historico">
                       <h4 v-if="index==0">Final</h4>
                       <h4 v-else>Paredão {{13-index}}</h4>
-                      <ul>
+                      <ul class="card-historico-paredao">
                         <li>
                           <!--<img :src="'https://api.adorable.io/avatars/256/'+paredon[0].nome" class="mini-avatar" :class="{eliminado:isVencedor(paredon[0],paredon)}" />-->
                           <div class="conteudo-card-historico">
-                            <i v-if="isVencedor(paredon[0],paredon)" class="fas fa-crown"></i>
+                            <i v-if="isVencedor(paredon[0],paredon)" class="fas fa-thumbs-up"></i>
                             <i v-else class="fas fa-times"></i>
-                            <h4 :class="{'riscado':!isVencedor(paredon[0],paredon)}">{{paredon[0].nome}}</h4>
+                            <h5 :class="{'riscado':!isVencedor(paredon[0],paredon)}">{{paredon[0].nome}}</h5>
                             <small>(BBB {{paredon[0].edicao}})</small>        
                           </div>                        
                         </li>
@@ -88,9 +88,9 @@
                         <li>
                           <!--<img :src="'https://api.adorable.io/avatars/256/'+paredon[1].nome" class="mini-avatar" :class="{eliminado:isVencedor(paredon[1],paredon)}"/>-->
                           <div class="conteudo-card-historico">
-                            <i v-if="isVencedor(paredon[1],paredon)" class="fas fa-crown"></i>
+                            <i v-if="isVencedor(paredon[1],paredon)" class="fas fa-thumbs-up"></i>
                             <i v-else class="fas fa-times"></i>                          
-                            <h4 :class="{'riscado':!isVencedor(paredon[1],paredon)}">{{paredon[1].nome}}</h4>
+                            <h5 :class="{'riscado':!isVencedor(paredon[1],paredon)}">{{paredon[1].nome}}</h5>
                             <small>(BBB {{paredon[1].edicao}})</small>        
                           </div>                        
                         </li>
@@ -107,8 +107,9 @@
                         <h5 class="participantes-titulo sombra-texto">Participantes</h5>
                         <li v-for="(bbb,key) in sorteados" :key="key" :class="[{eliminado:isEliminado(bbb)}]">
                           <b-tooltip :label="bbb.nome">
-                            <img :src="'https://api.adorable.io/avatars/256/'+bbb.nome" />
+                            <img :src="'img/fotos/'+bbb.foto+'.jpg'" />
                           </b-tooltip>
+                          <br/><small>(BBB {{bbb.edicao}})</small>
                         </li>
                       </ul>
                     </div>
@@ -204,10 +205,12 @@ export default {
       }
     },
     isEliminado: function(bbb){
-    	if(this.restantes.indexOf(bbb) == -1){
-      	return true
-      } else {
+    	if(_.includes(this.restantes,bbb)){
+        console.log('true')
       	return false
+      } else {
+        console.log('false')
+      	return true
       }
     },
     isVencedor: function(bbb,paredao){
@@ -279,10 +282,10 @@ export default {
       this.$bindAsObject('paredaoCarregado', db.ref('paredoes').child(paredaoId), null, () => {
         this.start = false        
         this.sorteados = this.paredaoCarregado.sorteados
-        this.campeao = this.paredaoCarregado.campeao
         this.edicoes_escolhidas = this.paredaoCarregado.edicoes_escolhidas
         this.historico = this.paredaoCarregado.historico
         this.campeao = this.paredaoCarregado.campeao
+        this.restantes = this.paredaoCarregado.sorteados
         //this.paredao = this.paredaoCarregado.historico[0]
         this.shareId = this.paredaoCarregado['.key']
         this.isLoading = false
@@ -347,16 +350,20 @@ export default {
     .VueCarousel {
     max-width:320px !important;
     }
+    .card-historico-paredao {
+      display:flex;
+      flex-direction:column;
+    }
   }
   @media (min-width: 1281px) {
     .card-paredao:hover img {
-      border: 2px solid #19386b;
+      border: 6px solid #7F0000;
       -webkit-border-radius: 10px;
       -moz-border-radius: 10px;
-      border-radius: 10px;    
+      border-radius: 100px;    
     }
     .card-paredao:hover, .card-paredao:hover strong {
-      color:#19386b !important;
+      color:#7F0000 !important;
     }
     .paredao {
       min-height:360px;
@@ -394,8 +401,8 @@ export default {
   .avatar img {
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
-    border-radius: 10px;   
-    border: 1px solid #dbdbdb;    
+    border-radius: 100px;   
+    border: 6px solid #dbdbdb;    
   }
   footer {
     margin-bottom:10px;
@@ -405,8 +412,12 @@ export default {
   }
   .participantes img {
     border:1px solid #000;
-    width:45px;
-    height:45px;
+    width:60px;
+    height:60px;
+    border-radius:100px;
+  }
+  .participantes small {
+    color:#F5F5F5;
   }
   .edicoes {
     max-width:620px;
@@ -449,16 +460,23 @@ export default {
   .eliminado {
     -webkit-filter: grayscale(100%);
   }
+  .iscampeao {
+    color:#fff;
+  }
   i{
     margin-right:5px;
     margin-top:2px;
   }
   .historico {
-    margin-top:30px;
+    margin-top:40px;
+  }
+  .historico h3 {
+    padding:10px 0 10px 0;
   }
   .historico-card {
     margin:0 30px 10px 30px !important;
   }
+
   figure {
     display:block;
     margin:auto;
@@ -466,12 +484,6 @@ export default {
   }
   .conteudo-card-paredao{
     padding:5px;
-  }
-  .versus{
-    padding:10px;
-    width:35px;
-    height:35px;
-    vertical-align:top;
   }
   .mini-avatar{
     width:45px;
@@ -485,22 +497,28 @@ export default {
   }
   .conteudo-card-historico {
     color:#000;
-    font-size:0.8em;
+    font-size:1em;
   }
   .conteudo-card-historico small {
-    color:#fff;
+    color:#19386b;
+    font-weight: bold;
   }
-  .conteudo-card-historico h4 {
+  .conteudo-card-historico h5 {
     font-weight:bold;
+  }
+  .versus {
+    font-weight:normal;
+    color:#cccccc;
   }
   .fa-times {
     color:red;
   }
-  .fa-crown {
-    color:orange;
+  .fa-thumbs-up {
+    color:green;
   }
   .riscado {
     text-decoration: line-through;
+    font-weight:normal !important;
   }
   .fa-heart {
     color:red;
