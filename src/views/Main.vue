@@ -40,7 +40,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="column is-narrow versus"><span>VS</span></div>
+                  <div class="column is-narrow"><span class="versus">VS</span></div>
                   <div class="column animated faster" :class="[!showcard2 ? elemanim2 : 'fadeInDown']" v-on:click="eliminaParedao(paredao[1],1)">
                     <div class="card-paredao">
                         <figure class="image avatar">
@@ -68,16 +68,16 @@
               </div>
               <div v-show="campeao.length>0" class="historico" :class="{'bounceIn':campeao.length>0}">
                 <h4 class="title is-5 sombra-texto" v-if="campeao.length>0">Histórico de Paredões</h4>
-                <carousel>
+                <carousel :perPage="3">
                     <slide v-for="(paredon,index) in historico">
                       <h4 v-if="index==0">Final</h4>
-                      <h4 v-else>Paredão {{13-index}}</h4>
+                      <h4 v-else>Paredão {{historico.length-index}}</h4>
                       <ul class="card-historico-paredao">
                         <li>
                           <!--<img :src="'https://api.adorable.io/avatars/256/'+paredon[0].nome" class="mini-avatar" :class="{eliminado:isVencedor(paredon[0],paredon)}" />-->
                           <div class="conteudo-card-historico">
                             <i v-if="isVencedor(paredon[0],paredon)" class="fas fa-thumbs-up"></i>
-                            <i v-else class="fas fa-times"></i>
+                            <i v-else class="fas fa-thumbs-down"></i>
                             <h5 :class="{'riscado':!isVencedor(paredon[0],paredon)}">{{paredon[0].nome}}</h5>
                             <small>(BBB {{paredon[0].edicao}})</small>        
                           </div>                        
@@ -89,7 +89,7 @@
                           <!--<img :src="'https://api.adorable.io/avatars/256/'+paredon[1].nome" class="mini-avatar" :class="{eliminado:isVencedor(paredon[1],paredon)}"/>-->
                           <div class="conteudo-card-historico">
                             <i v-if="isVencedor(paredon[1],paredon)" class="fas fa-thumbs-up"></i>
-                            <i v-else class="fas fa-times"></i>                          
+                            <i v-else class="fas fa-thumbs-down"></i>                          
                             <h5 :class="{'riscado':!isVencedor(paredon[1],paredon)}">{{paredon[1].nome}}</h5>
                             <small>(BBB {{paredon[1].edicao}})</small>        
                           </div>                        
@@ -350,10 +350,7 @@ export default {
     .VueCarousel {
     max-width:320px !important;
     }
-    .card-historico-paredao {
-      display:flex;
-      flex-direction:column;
-    }
+
   }
   @media (min-width: 1281px) {
     .card-paredao:hover img {
@@ -368,7 +365,11 @@ export default {
     .paredao {
       min-height:360px;
     }
-  } 
+  }
+  .card-historico-paredao {
+    display:flex;
+    flex-direction:column;
+  }   
   .box {
     padding: 1rem !important;
   }
@@ -510,14 +511,13 @@ export default {
     font-weight:normal;
     color:#cccccc;
   }
-  .fa-times {
-    color:red;
+  .fa-thumbs-down {
+    color:#990000;
   }
   .fa-thumbs-up {
     color:green;
   }
   .riscado {
-    text-decoration: line-through;
     font-weight:normal !important;
   }
   .fa-heart {
