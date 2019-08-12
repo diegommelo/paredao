@@ -11,14 +11,14 @@
 @import url('https://cdn.materialdesignicons.com/2.5.94/css/materialdesignicons.min.css');
 
 html {
-  height: 100%;
+  background-color: #0286d1 !important;
 }
 body {
-  background-color:#1f3c88;
-  height:100%;
   font-family: 'Fira Sans', sans-serif !important;  
+  color:#fff !important;
 }
 #app {
+  text-align:center;
   margin: auto;
 }
 ul > li {
@@ -30,7 +30,4 @@ ul > li {
     /* this fix is needed for IE7- */
 }
 
-#app {
-  text-align:center;
-}
 </style>

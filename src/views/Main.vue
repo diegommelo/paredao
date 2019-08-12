@@ -1,7 +1,7 @@
 <template>
     <div>
     <b-loading :is-full-page="isFullPage" :active.sync="isLoading" :can-cancel="true"></b-loading>      
-    <section v-if="paredaoCarregado" class="hero is-info is-bold is-fullheight">
+    <section v-if="paredaoCarregado" class="is-info is-bold is-fullheight">
       <div class="hero-body">
         <div class="container">
           <div class="brand">
@@ -54,7 +54,7 @@
                   </div>
                 </div>
               </div>
-              <div class="animated columns" v-show="campeao.length>0" :class="{'bounceIn':campeao.length>0}">
+              <div class="animated columns card-campeao" v-show="campeao.length>0" :class="{'bounceIn':campeao.length>0}">
                 <div class="column box is-three-fifths is-offset-one-fifth" v-if='campeao.length>0'>
                     <h1 class="title titulo-paredao has-text-warning"><i class="fas fa-trophy"></i> Campeão <i class="fas fa-trophy"></i></h1>
                     <figure class="avatar">
@@ -349,8 +349,13 @@ export default {
   @media (min-width: 320px) and (max-width: 480px) {
     .VueCarousel {
     max-width:320px !important;
+    font-size:0.8em;
     }
-
+  }
+  @media (max-width:320px) {
+    .card-campeao, .VueCarousel {
+      max-width: 300px !important;
+    }
   }
   @media (min-width: 1281px) {
     .card-paredao:hover img {
@@ -477,7 +482,9 @@ export default {
   .historico-card {
     margin:0 30px 10px 30px !important;
   }
-
+  h3, h6 {
+    color:#fff !important;
+  }
   figure {
     display:block;
     margin:auto;
