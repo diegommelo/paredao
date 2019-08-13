@@ -20,6 +20,7 @@
               <br/>
               <div class="play-button">
                 <a class="button is-dark is-medium" v-on:click="comecaParedao(edicoes_escolhidas,participantes)"><i class="fas fa-cog" :class="{'fa-spin':carregando}"></i><span> Gerar</span></a> 
+                <router-link to="config">Configurar</router-link>
               </div>
           </div>
           <div v-show="!start" class="conteudo animated faster slideInLeft">
@@ -40,7 +41,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="column is-narrow"><span class="versus">VS</span></div>
+                  <div class="column is-narrow"></div>
                   <div class="column animated faster" :class="[!showcard2 ? elemanim2 : 'fadeInDown']" v-on:click="eliminaParedao(paredao[1],1)">
                     <div class="card-paredao">
                         <figure class="image avatar">
