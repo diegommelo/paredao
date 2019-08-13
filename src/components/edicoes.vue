@@ -4,10 +4,10 @@
       <div class="hero-body">
         <div class="participantes">
           <ul>
-            <h5 class="participantes-titulo sombra-texto">Escolha os participantes</h5>
+            <h5 class="participantes-titulo sombra-texto">Escolha os participantes do BBB {{parseInt(escolhida['.key'])+1}}</h5>
             <li v-for="(bbb,key) in escolhida['.value']" :key="key">
               <div class="inside-li" v-on:click="escolheParticipante(bbb)">
-                <img :src="'img/fotos/'+bbb.foto+'.jpg'" />
+                <img :src="'img/fotos/'+bbb.foto+'.jpg'" :class="[{ativo:isAtivo(bbb)}]"/>
                 <br/><p>{{bbb.nome}}</p>
               </div>
             </li>
@@ -21,10 +21,18 @@
 <script>
 export default {
   name: 'edicoes',
-  props: ['escolhida'],
+  props: ['escolhida', 'participantes'],
   methods: {
     escolheParticipante(bbb){
       this.$emit('escolheBBB',bbb)
+      this.$forceUpdate();
+    },
+    isAtivo: function(bbb){
+      if(_.includes(this.participantes,bbb)){
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 }
@@ -32,11 +40,37 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  @media (min-width: 1281px) {
+    .participantes img {
+      border:6px solid #000;
+      width:90px;
+      height:90px;
+    }
+/*     .participantes ul li:hover img {
+      border: 6px solid #0178BC;
+      -webkit-border-radius: 10px;
+      -moz-border-radius: 10px;
+      border-radius: 100px;    
+    }       */
+  }  
+  @media (max-width:480px) {
+    .participantes img {
+      border:2px solid #000;
+      width:60px;
+      height:60px;      
+    }
+/*     .participantes ul li:hover img {
+      border: 2px solid #0178BC;
+      -webkit-border-radius: 10px;
+      -moz-border-radius: 10px;
+      border-radius: 100px;    
+    }      */ 
+  }
   .participantes {
     text-align: center;
   }
   .participantes p {
-    width:80px;
+    width:85px;
     word-wrap: break-word;
     font-size:0.9em;
   }
@@ -45,14 +79,18 @@ export default {
   }
   .participantes ul li {
     text-align: center;
-    min-height: 120px;
+    min-height: 152px;
     vertical-align: middle;
     padding-bottom:10px;
   }
+  .participantes ul li:hover img {
+    cursor: pointer;
+  }
+
   .participantes img {
-    border:1px solid #000;
-    width:60px;
-    height:60px;
     border-radius:100px;
+  }
+  .ativo {
+    border: 6px solid #0178BC !important;
   }
 </style>

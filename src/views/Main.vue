@@ -19,8 +19,8 @@
               </ul>
               <br/>
               <div class="play-button">
-                <a class="button is-dark is-medium" v-on:click="comecaParedao(edicoes_escolhidas,participantes)"><i class="fas fa-cog" :class="{'fa-spin':carregando}"></i><span> Gerar</span></a> 
-                <router-link to="config">Configurar</router-link>
+                <a class="button is-dark is-medium" v-on:click="comecaParedao(edicoes_escolhidas,participantes)"><i class="fas fa-magic" :class="{'fa-spin':carregando}"></i><span> Gerar</span></a> 
+                <router-link to="config" class="button is-dark is-medium"><i class="fas fa-cog" :class="{'fa-spin':carregando}"></i>Criar</router-link>
               </div>
           </div>
           <div v-show="!start" class="conteudo animated faster slideInLeft">
