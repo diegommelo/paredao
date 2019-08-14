@@ -7,6 +7,15 @@
             <img src="/img/bbb-logo.png" class="bbb-logo" />            
           </div>        
         <div class="edicoes">
+
+          <div class="lista-edicoes">
+            <h2>Selecionar participantes</h2>
+            <ul>
+              <li v-for="edicao in edicoes">
+                <a class="button is-dark" @click="carregaEdicao(parseInt(edicao['.key']))">BBB {{parseInt(edicao['.key'])+1}}</a>
+              </li>
+            </ul>
+          </div>
           <div class="participantes-escolhidos">
             <h2>Participantes escolhidos</h2>
             <ul>
@@ -22,16 +31,13 @@
                   <span>&nbsp</span>
                 </div>
               </li>
-            </ul>            
-          </div>
-          <div class="lista-edicoes">
-            <h2>Selecionar participantes</h2>
-            <ul>
-              <li v-for="edicao in edicoes">
-                <a class="button is-dark" @click="carregaEdicao(parseInt(edicao['.key']))">BBB {{parseInt(edicao['.key'])+1}}</a>
-              </li>
-            </ul>
-          </div>
+            </ul>   
+            <button class="button is-dark" :disabled="isVazio()" @click="participantes = [];total_participantes = 14"><i class="fas fa-eraser"></i> <span>Limpar</span></button>      
+          </div>          
+        </div>
+        <div class="edicao-buttons">
+          <a class="button is-dark" @click="salvaEdicao()"><i class="fas fa-cog"></i> <span>Gerar Paredão</span></a>
+          <router-link class="button is-dark" to="/"><i class="fas fa-redo"></i><span> Voltar</span></router-link>
         </div>
       </div>
     </section>  
@@ -51,6 +57,7 @@ export default {
   data: function() {
     return {
       edicoes: {},
+      edicaoSalva: {},
       participantes: [],
       total_participantes:14
     }
@@ -71,12 +78,16 @@ export default {
               return o.foto == event.foto
             })
             if(el.participantes.length == 14){
-              el.$toast.open({
-                duration: 2000,
-                message: 'Edição completa',
-                position: 'is-bottom',
-                type: 'is-danger'                  
-              })
+              if(hasBBB == -1){
+                el.$toast.open({
+                  duration: 2000,
+                  message: 'Edição completa',
+                  position: 'is-bottom',
+                  type: 'is-warning'                  
+                })                
+              } else {
+                el.removeParticipante(event)
+              } 
             } else {
               if(hasBBB == -1){
                 el.participantes.push(event)
@@ -94,6 +105,35 @@ export default {
         return n.foto == bbb.foto
       })
       this.total_participantes = this.total_participantes + 1
+    },
+    salvaEdicao: function(){
+      let router = this.$router
+      if(this.participantes.length < 14) {
+        this.$toast.open({
+          duration:2000,
+          message: 'Faltam participantes',
+          position:'is-bottom',
+          type:'is-danger'
+        })
+      } else {
+        this.$firebaseRefs.edicaoSalva.push({
+          participantes: this.participantes,
+          edicoes_escolhidas:[0],
+          criado_por:"",
+          created_at:Date(Date.now())
+        }).then(function(docRef){
+          console.log(docRef.key)
+          router.push({name:'paredao',query:{c:docRef.key}})
+        })    
+      }  
+    },
+    isVazio: function(){
+      console.log(this.participantes.length)
+      if(this.participantes.length == 0){
+        return true
+      } else {
+        return false
+      }
     }
   },
   firebase: {
@@ -101,6 +141,12 @@ export default {
       source: db.ref('edicoes'),
       cancelCallback(err){
         console.error(err);
+      }
+    },
+    edicaoSalva: {
+      source: db.ref('personalizado').limitToFirst(1),
+      cancelCallback(err){
+        console.error(err)
       }
     }
   },  
@@ -121,10 +167,16 @@ export default {
       width:60px;
       height:60px;      
     }
+    .edicao-buttons a {
+      margin:8px 10px !important;
+    }
   }
   .edicoes {
     max-width:620px;
     margin:30px auto;
+  }
+  .edicoes ul > li {
+    padding: 0;
   }
   .participantes-escolhidos {
     padding-bottom:15px;
@@ -135,7 +187,10 @@ export default {
   }
   .participantes-escolhidos li, .lista-edicoes li {
     
-  }  
+  } 
+  .lista-edicoes {
+    margin-bottom:40px;
+  } 
   .lista-edicoes li a {
     margin:5px;
   }
@@ -148,5 +203,8 @@ export default {
   }
   .edicoes h2 {
     padding-bottom:10px;
+  }
+  .edicao-buttons a {
+    margin:0 15px;
   }
 </style>

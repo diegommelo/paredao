@@ -19,8 +19,8 @@
               </ul>
               <br/>
               <div class="play-button">
-                <a class="button is-dark is-medium" v-on:click="comecaParedao(edicoes_escolhidas,participantes)"><i class="fas fa-magic" :class="{'fa-spin':carregando}"></i><span> Gerar</span></a> 
-                <router-link to="config" class="button is-dark is-medium"><i class="fas fa-cog" :class="{'fa-spin':carregando}"></i>Criar</router-link>
+                <a class="button is-dark is-medium" v-on:click="comecaParedao(edicoes_escolhidas,participantes)"><i class="fas fa-magic" :class="{'fa-spin':carregando}"></i><span> Gerar Paredão</span></a> 
+                <router-link to="config" class="button is-dark is-medium"><i class="fas fa-cog" :class="{'fa-spin':carregando}"></i>Personalizar</router-link>
               </div>
           </div>
           <div v-show="!start" class="conteudo animated faster slideInLeft">
@@ -106,7 +106,7 @@
                     <div v-images-loaded="imageProgress">
                       <ul>
                         <h5 class="participantes-titulo sombra-texto">Participantes</h5>
-                        <li v-for="(bbb,key) in sorteados" :key="key" :class="[{eliminado:isEliminado(bbb)}]">
+                        <li v-for="(bbb,key) in sorteados" :key="key" :class="[{eliminado:!isEliminado(bbb)}]">
                           <b-tooltip :label="bbb.nome">
                             <img :src="'img/fotos/'+bbb.foto+'.jpg'" />
                           </b-tooltip>
@@ -206,13 +206,7 @@ export default {
       }
     },
     isEliminado: function(bbb){
-    	if(_.includes(this.restantes,bbb)){
-        console.log('true')
-      	return false
-      } else {
-        console.log('false')
-      	return true
-      }
+      return _.includes(this.restantes,bbb)
     },
     isVencedor: function(bbb,paredao){
     	return (bbb.nome == paredao[2].nome) ?  true : false;
@@ -233,7 +227,7 @@ export default {
         })
       	this.sorteados = _.sampleSize(this.bbbs,participantes)
         //reseta database
-      	this.restantes = this.sorteados.slice(0)
+      	this.restantes = this.sorteados.slice()
         this.historico = []
         this.paredao = []
         this.bbbs = []
@@ -267,7 +261,6 @@ export default {
     },
     encerraParedao: function(){
         var router = this.$router
-        console.log(router)
         this.$firebaseRefs.paredoesSalvos.push({
           campeao: this.restantes.slice(0),
           edicoes_escolhidas:this.edicoes_escolhidas,
@@ -275,32 +268,46 @@ export default {
           historico:this.historico,
           created_at:Date(Date.now())
         }).then(function(docRef){
-          console.log(docRef)
           router.push({name:'paredao',query:{p:docRef.key}})
         })
     },
-    carregaParedao: function(paredaoId){
-      this.$bindAsObject('paredaoCarregado', db.ref('paredoes').child(paredaoId), null, () => {
-        this.start = false        
-        this.sorteados = this.paredaoCarregado.sorteados
-        this.edicoes_escolhidas = this.paredaoCarregado.edicoes_escolhidas
-        this.historico = this.paredaoCarregado.historico
-        this.campeao = this.paredaoCarregado.campeao
-        this.restantes = this.paredaoCarregado.sorteados
-        //this.paredao = this.paredaoCarregado.historico[0]
-        this.shareId = this.paredaoCarregado['.key']
-        this.isLoading = false
-      })
-
+    carregaParedao: function(paredaoId,tipo){
+      let el = this
+      if(tipo==2){
+        this.$bindAsObject('edicaoCarregada', db.ref('personalizado').child(paredaoId), null, () => {
+          this.start = false
+          this.edicoes_escolhidas = [] 
+          this.sorteados = this.edicaoCarregada.participantes
+          this.restantes = this.edicaoCarregada.participantes.slice()
+          el.sorteiaParedao()
+          this.isLoading = false
+        })
+      } else {
+        this.$bindAsObject('paredaoCarregado', db.ref('paredoes').child(paredaoId), null, () => {
+          this.start = false        
+          this.sorteados = this.paredaoCarregado.sorteados
+          this.edicoes_escolhidas = this.paredaoCarregado.edicoes_escolhidas
+          this.historico = this.paredaoCarregado.historico
+          this.campeao = this.paredaoCarregado.campeao
+          this.restantes = this.paredaoCarregado.sorteados
+          //this.paredao = this.paredaoCarregado.historico[0]
+          this.shareId = this.paredaoCarregado['.key']
+          this.isLoading = false
+        })
+      }
     }
   },
   created: function(){
     console.log('created')
-    if(this.$route.query.p==undefined){
+    if(this.$route.query.p==undefined && this.$route.query.c==undefined){
       this.start = true
       this.isLoading = false
+    } else if (this.$route.query.p!=undefined){
+      this.carregaParedao(this.$route.query.p,1)
+    } else if (this.$route.query.c!=undefined){
+      this.carregaParedao(this.$route.query.c,2)
     } else {
-      this.carregaParedao(this.$route.query.p)
+      console.log('eita')
     }
 	},    
 	watch: {
@@ -352,6 +359,9 @@ export default {
     max-width:320px !important;
     font-size:0.8em;
     }
+    .play-button a {
+      margin: 10px 0 !important;
+    }
   }
   @media (max-width:320px) {
     .card-campeao, .VueCarousel {
@@ -382,8 +392,8 @@ export default {
   .hero-body {
     padding: 2rem 1.5rem !important;
   }
-  .play-button{
-    margin-bottom:20px;
+  .play-button a{
+    margin: 0 15px;
   }
   .brand h1 {
     font-size:2em;    
@@ -538,5 +548,5 @@ export default {
     margin-top:5px;
     font-size:0.6rem;
     color:#C0D6DF;
-  }
+  } 
 </style>
