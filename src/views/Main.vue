@@ -20,7 +20,7 @@
               <br/>
               <div class="play-button">
                 <a class="button is-dark is-medium" v-on:click="comecaParedao(edicoes_escolhidas,participantes)"><i class="fas fa-magic" :class="{'fa-spin':carregando}"></i><span> Gerar Paredão</span></a> 
-                <router-link to="config" class="button is-dark is-medium"><i class="fas fa-cog" :class="{'fa-spin':carregando}"></i>Personalizar</router-link>
+                <router-link to="personalizar" class="button is-dark is-medium"><i class="fas fa-cog" :class="{'fa-spin':carregando}"></i>Personalizar</router-link>
               </div>
           </div>
           <div v-show="!start" class="conteudo animated faster slideInLeft">
@@ -100,7 +100,7 @@
                   </carousel>
               </div>
               <hr class="divisor"></hr>
-              <div class="participantes" v-show="!start">
+              <div class="participantesMain" v-show="!start">
                 <div class="columns">
                   <div class="column">
                     <div v-images-loaded="imageProgress">
@@ -276,7 +276,7 @@ export default {
       if(tipo==2){
         this.$bindAsObject('edicaoCarregada', db.ref('personalizado').child(paredaoId), null, () => {
           this.start = false
-          this.edicoes_escolhidas = [] 
+          this.edicoes_escolhidas = this.edicaoCarregada.edicoes_escolhidas
           this.sorteados = this.edicaoCarregada.participantes
           this.restantes = this.edicaoCarregada.participantes.slice()
           el.sorteiaParedao()
@@ -424,10 +424,10 @@ export default {
   footer {
     margin-bottom:10px;
   }
-  .participantes {
+  .participantesMain {
     margin-bottom: 30px;
   }
-  .participantes img {
+  .participantesMain img {
     border:1px solid #000;
     width:60px;
     height:60px;

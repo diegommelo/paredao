@@ -6,8 +6,7 @@
             <h3 class="meu-paredao">Gerador de Paredões do</h3>
             <img src="/img/bbb-logo.png" class="bbb-logo" />            
           </div>        
-        <div class="edicoes">
-
+        <div class="edicoes faster animated slideInLeft">
           <div class="lista-edicoes">
             <h2>Selecionar participantes</h2>
             <ul>
@@ -32,7 +31,7 @@
                 </div>
               </li>
             </ul>   
-            <button class="button is-dark" :disabled="isVazio()" @click="participantes = [];total_participantes = 14"><i class="fas fa-eraser"></i> <span>Limpar</span></button>      
+            <button class="button is-dark btnLimpar" :disabled="isVazio()" @click="participantes = [];total_participantes = 14"><i class="fas fa-eraser"></i> <span>Limpar</span></button>      
           </div>          
         </div>
         <div class="edicao-buttons">
@@ -48,6 +47,7 @@
 <script>
 // @ is an alias to /src
 import edicoes from '@/components/edicoes.vue'
+import confirmaedicao from '@/components/confirmaedicao.vue'
 import imagesLoaded from 'vue-images-loaded'
 import { Carousel, Slide } from 'vue-carousel';
 import { db } from '../firebaseconfig'
@@ -59,7 +59,8 @@ export default {
       edicoes: {},
       edicaoSalva: {},
       participantes: [],
-      total_participantes:14
+      total_participantes:14,
+      edicoes_escolhidas:[]
     }
   },
   methods: {
@@ -91,7 +92,8 @@ export default {
             } else {
               if(hasBBB == -1){
                 el.participantes.push(event)
-                el.total_participantes = el.total_participantes - 1
+                el.total_participantes = el.total_participantes - 1 
+                el.edicoes_escolhidas.push(event.edicao)
               } else {
                 el.removeParticipante(event)
               }
@@ -108,6 +110,7 @@ export default {
     },
     salvaEdicao: function(){
       let router = this.$router
+      let el = this
       if(this.participantes.length < 14) {
         this.$toast.open({
           duration:2000,
@@ -118,13 +121,22 @@ export default {
       } else {
         this.$firebaseRefs.edicaoSalva.push({
           participantes: this.participantes,
-          edicoes_escolhidas:[0],
+          edicoes_escolhidas:_.uniq(this.edicoes_escolhidas),
           criado_por:"",
           created_at:Date(Date.now())
         }).then(function(docRef){
           console.log(docRef.key)
-          router.push({name:'paredao',query:{c:docRef.key}})
-        })    
+          el.$modal.open({
+            parent: el,
+            component: confirmaedicao,
+            props: {
+              "edicaoId":docRef.key
+            }
+          }).catch(function(err){
+            console.error('erro ao salvar edição especial')
+          })
+/*           router.push({name:'paredao',query:{c:docRef.key}})
+ */        })    
       }  
     },
     isVazio: function(){
@@ -151,7 +163,8 @@ export default {
     }
   },  
   components: {
-    edicoes
+    edicoes,
+    confirmaedicao
   }
 }
 </script>
@@ -206,5 +219,8 @@ export default {
   }
   .edicao-buttons a {
     margin:0 15px;
+  }
+  .btnLimpar{
+    margin-top:20px;
   }
 </style>

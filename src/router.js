@@ -17,8 +17,8 @@ export default new Router({
       component: Paredao,
     },
     {
-      path: '/config',
-      name: 'configrar',
+      path: '/personalizar',
+      name: 'personalizar',
       meta: {
         title:'Personalizar Paredão do BBB',
       },
