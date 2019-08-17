@@ -132,11 +132,11 @@ export default {
             props: {
               "edicaoId":docRef.key
             }
-          }).catch(function(err){
-            console.error('erro ao salvar edição especial')
           })
 /*           router.push({name:'paredao',query:{c:docRef.key}})
- */        })    
+ */        }).catch(function(err){
+            console.error('erro ao salvar edição especial')
+          })    
       }  
     },
     isVazio: function(){

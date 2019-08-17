@@ -1,11 +1,23 @@
 <template>
-    <div class="card">
+    <div class="cardB">
       <div class="card-content">
-        <h1>Edição Especial Criada com sucesso!</h1>
-        <p>Compartilhe com os amigos enviando o link abaixo:</p>
-        <p>www.geradordeparedao.com.br/especial/{{edicaoId}}</p>
+        <img src="img/icons/ok.png" class="ok" />
+        <p>Compartilhe com seus amigos enviando o link abaixo:</p>
+        <b-input v-model="url_share" icon-pack="far" type="copy" @focus="$event.target.select(); copiarUrl();" ref="urlshare"></b-input>
+        <p>Ou postando em suas redes sociais:</p>
         <div class="redes-sociais">
-          
+          <a class="fa-stack fa-2x">
+            <i class="fas fa-square fa-stack-2x twitter"></i>
+            <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+          </a>
+          <a class="fa-stack fa-2x">
+            <i class="fas fa-square fa-stack-2x facebook"></i>
+            <i class="fab fa-facebook fa-stack-1x fa-inverse"></i>
+          </a>
+          <a class="fa-stack fa-2x">
+            <i class="fas fa-square fa-stack-2x whatsapp"></i>
+            <i class="fab fa-whatsapp fa-stack-1x fa-inverse"></i>
+          </a>                              
         </div>
         <div class="edicao-buttons">
           <a class="button is-dark" @click="this.$parent.close"><i class="fas fa-cog"></i> <span>Ver edição</span></a>
@@ -19,15 +31,54 @@
 export default {
   name: 'confirmaEdicao',
   props: ['edicaoId'],
+  data: function(){
+    return {
+      url_share: "https://geradordeparedao.com.br/especial/"+this.edicaoId
+    }
+  },
   methods: {
+    copiarUrl: function(){
+      document.execCommand("copy");
+      this.$toast.open({
+        duration:1500,
+        message: 'Url Copiada',
+        type:"is-info",
+        position:"is-bottom"
+      })
+    }
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.card {
+.cardB {
   border-radius:10px;
   text-align: center;
+  max-width: 450px;
+  margin: 0 auto;
+  line-height: 30px;
+}
+.ok {
+  max-width: 120px;
+}
+.redes-sociais {
+  margin-bottom:30px;
+}
+
+.facebook {
+  color:#3b5998 !important;
+}
+.twitter {
+  color:#1da1f2  
+}
+.whatsapp {
+  color:#25D366;
+}
+.card-content .control {
+  margin:5px 0 10px 0 !important;
+}
+.edicao-buttons a {
+  margin:0 10px;
 }
 </style>
