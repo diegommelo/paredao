@@ -131,7 +131,8 @@ export default {
             component: confirmaedicao,
             props: {
               "edicaoId":docRef.key
-            }
+            },
+            canCancel: []
           })
 /*           router.push({name:'paredao',query:{c:docRef.key}})
  */        }).catch(function(err){

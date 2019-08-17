@@ -268,7 +268,7 @@ export default {
           historico:this.historico,
           created_at:Date(Date.now())
         }).then(function(docRef){
-          router.push({name:'paredao',query:{p:docRef.key}})
+          router.push({name:'paredao',query:{resultado:docRef.key}})
         })
     },
     carregaParedao: function(paredaoId,tipo){
@@ -299,13 +299,13 @@ export default {
   },
   created: function(){
     console.log('created')
-    if(this.$route.query.p==undefined && this.$route.query.c==undefined){
+    if(this.$route.query.resultado==undefined && this.$route.query.especial==undefined){
       this.start = true
       this.isLoading = false
-    } else if (this.$route.query.p!=undefined){
-      this.carregaParedao(this.$route.query.p,1)
-    } else if (this.$route.query.c!=undefined){
-      this.carregaParedao(this.$route.query.c,2)
+    } else if (this.$route.query.resultado!=undefined){
+      this.carregaParedao(this.$route.query.resultado,1)
+    } else if (this.$route.query.especial!=undefined){
+      this.carregaParedao(this.$route.query.especial,2)
     } else {
       console.log('eita')
     }
@@ -313,11 +313,11 @@ export default {
 	watch: {
 	  '$route' (to,from) {
 	    console.log('watch')
-	    if(to.query.p==undefined) {
+	    if(to.query.resultado==undefined) {
 	      this.start = true
         this.isLoading = false
 	    } else {
-	      this.carregaParedao(to.query.p)
+	      this.carregaParedao(to.query.resultado)
 	    }
 	  },
 	  'paredaoCarregado' () {
@@ -377,6 +377,7 @@ export default {
     }
     .card-paredao:hover, .card-paredao:hover strong {
       color:#7F0000 !important;
+      cursor:pointer;
     }
     .paredao {
       min-height:360px;
@@ -486,6 +487,9 @@ export default {
   }
   .historico {
     margin-top:40px;
+  }
+  .historico h4 {
+    color:#fff;
   }
   .historico h3 {
     padding:10px 0 10px 0;
