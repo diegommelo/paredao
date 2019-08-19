@@ -33,7 +33,7 @@
                   <div class="column animated faster" :class="[!showcard1 ? elemanim1 : 'fadeInDown']" v-on:click="eliminaParedao(paredao[0],0)">
                     <div class="card-paredao">
                       <figure class="image avatar">
-                        <img :src="'img/fotos/'+paredao[0].foto+'.jpg'" /> 
+                        <img :src="'/img/fotos/'+paredao[0].foto+'.jpg'" /> 
                       </figure>      
                       <div class="conteudo-card-paredao">
                       <p><strong>{{paredao[0].nome}}</strong></p>
@@ -45,7 +45,7 @@
                   <div class="column animated faster" :class="[!showcard2 ? elemanim2 : 'fadeInDown']" v-on:click="eliminaParedao(paredao[1],1)">
                     <div class="card-paredao">
                         <figure class="image avatar">
-                          <img :src="'img/fotos/'+paredao[1].foto+'.jpg'" /> 
+                          <img :src="'/img/fotos/'+paredao[1].foto+'.jpg'" /> 
                         </figure> 
                         <div class="conteudo-card-paredao">
                           <h4><strong>{{paredao[1].nome}}</strong></h4>
@@ -59,7 +59,7 @@
                 <div class="column box is-three-fifths is-offset-one-fifth" v-if='campeao.length>0'>
                     <h1 class="title titulo-paredao has-text-warning"><i class="fas fa-trophy"></i> Campeão <i class="fas fa-trophy"></i></h1>
                     <figure class="avatar">
-                      <img :src="'img/fotos/'+campeao[0].foto+'.jpg'" /> 
+                      <img :src="'/img/fotos/'+campeao[0].foto+'.jpg'" /> 
                     </figure> 
                     <div class="campeao conteudo-card-paredao">
                       <p><strong>{{campeao[0].nome}}</strong></p>
@@ -108,7 +108,7 @@
                         <h5 class="participantes-titulo sombra-texto">Participantes</h5>
                         <li v-for="(bbb,key) in sorteados" :key="key" :class="[{eliminado:!isEliminado(bbb)}]">
                           <b-tooltip :label="bbb.nome">
-                            <img :src="'img/fotos/'+bbb.foto+'.jpg'" />
+                            <img :src="'/img/fotos/'+bbb.foto+'.jpg'" />
                           </b-tooltip>
                           <br/><small>(BBB {{bbb.edicao}})</small>
                         </li>
@@ -268,7 +268,7 @@ export default {
           historico:this.historico,
           created_at:Date(Date.now())
         }).then(function(docRef){
-          router.push({name:'paredao',query:{resultado:docRef.key}})
+          router.push({name:'paredao',params:{resultado:docRef.key}})
         })
     },
     carregaParedao: function(paredaoId,tipo){
@@ -299,13 +299,14 @@ export default {
   },
   created: function(){
     console.log('created')
-    if(this.$route.query.resultado==undefined && this.$route.query.especial==undefined){
+    console.log(this.$route)
+    if(!this.$route.params.paredaoId){
       this.start = true
       this.isLoading = false
-    } else if (this.$route.query.resultado!=undefined){
-      this.carregaParedao(this.$route.query.resultado,1)
-    } else if (this.$route.query.especial!=undefined){
-      this.carregaParedao(this.$route.query.especial,2)
+    } else if (this.$route.name=="resultado"){
+      this.carregaParedao(this.$route.params.paredaoId,1)
+    } else if (this.$route.name=="especial"){
+      this.carregaParedao(this.$route.params.paredaoId,2)
     } else {
       console.log('eita')
     }

@@ -23,7 +23,23 @@ export default new Router({
         title:'Personalizar Paredão do BBB',
       },
       component: Config
-    }
+    },
+    {
+      path: '/resultado/:paredaoId',
+      name: 'resultado',
+      meta: {
+        title:'Gerador de Paredões do BBB'
+      },
+      component: Paredao
+    },
+    {
+      path: '/especial/:paredaoId',
+      name: 'especial',
+      meta: {
+        title:'Gerador de Paredões do BBB'
+      },
+      component: Paredao
+    }    
     // {
     //   path: '/personalizar',
     //   name: 'personalizar',
