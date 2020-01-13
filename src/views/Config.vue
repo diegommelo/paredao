@@ -125,7 +125,6 @@ export default {
           criado_por:"",
           created_at:Date(Date.now())
         }).then(function(docRef){
-          console.log(docRef.key)
           el.$buefy.modal.open({
             parent: el,
             component: confirmaedicao,
@@ -179,9 +178,7 @@ export default {
     max-width:620px;
     margin:30px auto;
   }
-  .edicoes ul > li {
-    padding: 0;
-  }
+
   .participantes-escolhidos {
     padding-bottom:15px;
   }

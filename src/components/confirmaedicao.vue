@@ -7,7 +7,7 @@
         </a>  
         <p>Compartilhe com seus amigos enviando o link abaixo:</p>
         <b-input v-model="url_share" icon-pack="far" type="copy" @focus="$event.target.select(); copiarUrl();" ref="urlshare"></b-input>
-        <p>Ou postando em suas redes sociais:</p>
+<!--         <p>Ou postando em suas redes sociais:</p>
         <div class="redes-sociais">
           <a class="fa-stack fa-2x">
             <i class="fas fa-square fa-stack-2x twitter"></i>
@@ -21,7 +21,7 @@
             <i class="fas fa-square fa-stack-2x whatsapp"></i>
             <i class="fab fa-whatsapp fa-stack-1x fa-inverse"></i>
           </a>                              
-        </div>
+        </div> -->
         <div class="edicao-buttons">
           <a class="button is-dark" @click="fechaConfirm('paredao',edicaoId)"><i class="far fa-eye"></i> <span>Espiar edição</span></a>
           <a class="button is-dark" @click="fechaConfirm('home',edicaoId)"><i class="fas fa-redo"></i> <span>Novo paredão</span></a>
@@ -96,6 +96,6 @@ export default {
   margin:5px 0 10px 0 !important;
 }
 .edicao-buttons a {
-  margin:0 10px;
+  margin:20px 10px;
 }
 </style>
