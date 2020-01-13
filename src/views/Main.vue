@@ -6,7 +6,7 @@
         <div class="container">
           <div class="brand">
             <h3 class="meu-paredao">Gerador de Paredões do</h3>
-            <img src="/img/bbb-logo.png" class="bbb-logo" />            
+            <a href="/"><img src="/img/bbb-logo.png" class="bbb-logo" /></a>            
           </div>
           <div v-if="start" class="edicoes hero faster animated slideInLeft">
               <h6 class="title is-5 sombra-texto">Escolha as edições</h6>
@@ -134,7 +134,7 @@
       </div>
       <div class="hero-foot">
         <footer>
-          feito com <i class="fas fa-heart"></i>por <span class="orange">@paulinha_v</span> e <span class="orange">@dieguitoo</span>
+          feito com <i class="fas fa-heart"></i>por <a href="https://twitter.com/paulinha_v" class="orange">@paulinha_v</a> e <a href="https://twitter.com/dieguitoo" class="orange">@dieguitoo</a>
           <p class="disclaimer">Este site não é afiliado a Globo ou a Endemol.<br/>  Todos os direitos reservados a seus respectivos proprietários.</p>
         </footer>        
       </div>    
@@ -174,6 +174,26 @@ export default {
       edicoesSalvas:[]
     }
   },  
+  head: {
+    title: {
+      inner:'Gerador de Paredão do BBB',
+      separator:' ',
+      complement:' '
+    },
+    meta: [
+      {name:'application-name', content:'Gerador de Paredão do BBB'},
+      {name:'descrition', content:'Crie sua própria edição do Big Brother Brasil!'},
+      //twitter
+      {name:'twitter:title', content:'Gerador de Paredão do BBB'},
+      {name:'twitter:description', content:'Crise sua própria edição do Big Brother Brasil!'},
+      {name:'twitter:image', content:'https://geradordeparedao.diegomelo.com/img/icons/robo.jpg'},
+      //facebook
+      {property:'og:title', content:'Gerador de Paredão do BBB'},
+      {property:'og:type', content:'website'},
+      {property:'og:image', content:'https://geradordeparedao.diegomelo.com/img/icons/robo.jpg'},
+      {property:'og:url',content:'https://geradordeparedao.diegomelo.com'}
+    ]
+  },
   methods: {
   	sorteiaParedao: function(){
     	let el = this
@@ -213,7 +233,7 @@ export default {
     	return (bbb.nome == paredao[2].nome) ?  true : false;
     },
     escolheEdicao: function(edicao){
-    	console.log(edicao)
+    	// console.log(edicao)
     },
     checaEdicao: function(edicao){
     	return (this.edicoes_escolhidas.indexOf(edicao)==1) ? true : false
@@ -249,7 +269,7 @@ export default {
       this.start = false
       this.carregando = false
       scroll(0,0)
-      console.log('imgloaded')
+      // console.log('imgloaded')
     },
     resetaParedao: function(){
       this.restantes=[]
@@ -300,7 +320,7 @@ export default {
     }
   },
   created: function(){
-    console.log('created')
+    // console.log('created')
     if(!this.$route.params.paredaoId){
       this.start = true
       this.isLoading = false
@@ -314,8 +334,7 @@ export default {
 	},    
 	watch: {
 	  '$route' (to,from) {
-      console.log('watch')
-      console.log(to)
+      // console.log('watch')
 	    if(to.params.paredaoId==undefined) {
 	      this.start = true
         this.isLoading = false
@@ -325,7 +344,7 @@ export default {
 	  },
 	  'paredaoCarregado' () {
 	    if(this.paredaoCarregado.hasOwnProperty('.value')) {
-	      console.log('ue')
+	      // console.log('ue')
 	      this.campeao = []
 	      this.paredao = []
 	      this.sorteados = []

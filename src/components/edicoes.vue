@@ -7,7 +7,8 @@
             <h5 class="participantes-titulo sombra-texto">Escolha os participantes do BBB {{parseInt(escolhida['.key'])+1}}</h5>
             <li v-for="(bbb,key) in escolhida" :key="key">
               <div class="inside-li" v-on:click="escolheParticipante(bbb)">
-                <img :src="'img/fotos/'+bbb.foto+'.jpg'" :class="[{ativo:isAtivo(bbb)}]"/>
+                <v-lazy-image :src="'img/fotos/'+bbb.foto+'.jpg'" src-placeholder="img/icons/robo.jpg" :class="[{ativo:isAtivo(bbb)}]" />
+                <!-- <img :src="'img/fotos/'+bbb.foto+'.jpg'" :class="[{ativo:isAtivo(bbb)}]"/> -->
                 <br/><p>{{bbb.nome}}</p>
               </div>
             </li>
@@ -93,4 +94,11 @@ export default {
   .ativo {
     border: 6px solid #0178BC !important;
   }
+    .v-lazy-image {
+  filter: blur(3px);
+  transition: filter 0.7s;
+}
+.v-lazy-image-loaded {
+  filter: blur(0);
+}
 </style>

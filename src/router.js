@@ -20,7 +20,7 @@ export default new Router({
       path: '/personalizar',
       name: 'personalizar',
       meta: {
-        title:'Personalizar Paredão do BBB',
+        title:'Personalizar Paredão do BBB',  
       },
       component: Config
     },

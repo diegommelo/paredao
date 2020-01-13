@@ -1,10 +1,11 @@
 <template>
   <div>
+    <b-loading :is-full-page="true" :active="true" v-if="edicoes.length==0"></b-loading> 
     <section class="is-info is-bold is-fullheight">
       <div class="hero-body">
           <div class="brand">
             <h3 class="meu-paredao">Gerador de Paredões do</h3>
-            <img src="/img/bbb-logo.png" class="bbb-logo" />            
+            <a href="/"><img src="/img/bbb-logo.png" class="bbb-logo" /></a> 
           </div>        
         <div class="edicoes faster animated slideInLeft">
           <div class="lista-edicoes">
@@ -20,14 +21,16 @@
             <ul>
               <li v-for="(bbb,key) in participantes" v-on:click="removeParticipante(bbb)">
                 <div>
-                  <img :src="'img/fotos/'+bbb.foto+'.jpg'"/><br/>
+                  <v-lazy-image :src="'img/fotos/'+bbb.foto+'.jpg'" src-placeholder="img/icons/robo.jpg" />
+                  <!-- <img :src="'img/fotos/'+bbb.foto+'.jpg'"/> -->
+                  <br/>
                   <span>(BBB {{bbb.edicao}})</span>
                 </div>
               </li>              
-              <li v-for="n in total_participantes">
+              <li v-for="n in total_participantes" class="robo">
                 <div>
                   <img src="img/icons/robo.jpg" /><br/>
-                  <span>(BBB X)</span>
+                  <p>&nbsp</p>
                 </div>
               </li>
             </ul>   
@@ -60,7 +63,8 @@ export default {
       edicaoSalva: [],
       participantes: [],
       total_participantes:14,
-      edicoes_escolhidas:[]
+      edicoes_escolhidas:[],
+      isLoading:true
     }
   },
   methods: {
@@ -155,6 +159,13 @@ export default {
   components: {
     edicoes,
     confirmaedicao
+  },
+  head: {
+    title: {
+      inner:'Personalizar Paredão',
+      separator:' ',
+      complement:' '
+    }
   }
 }
 </script>
@@ -186,9 +197,6 @@ export default {
     border:6px solid #0178BC;
     border-radius:100px;
   }
-  .participantes-escolhidos li, .lista-edicoes li {
-    
-  } 
   .lista-edicoes {
     margin-bottom:40px;
   } 
@@ -210,5 +218,16 @@ export default {
   }
   .btnLimpar{
     margin-top:20px;
+  }
+  .robo {
+    min-height:130px;
+    vertical-align: top;
+  }
+  .v-lazy-image {
+  filter: blur(3px);
+  transition: filter 0.7s;
+}
+  .v-lazy-image-loaded {
+    filter: blur(0);
   }
 </style>

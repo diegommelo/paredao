@@ -37,7 +37,7 @@ export default {
   props: ['edicaoId'],
   data: function(){
     return {
-      url_share: "https://geradordeparedao.com.br/especial/"+this.edicaoId
+      url_share: "https://geradordeparedao.diegomelo.com/especial/"+this.edicaoId
     }
   },
   methods: {
