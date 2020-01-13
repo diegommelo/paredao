@@ -5,7 +5,7 @@
         <div class="participantes">
           <ul>
             <h5 class="participantes-titulo sombra-texto">Escolha os participantes do BBB {{parseInt(escolhida['.key'])+1}}</h5>
-            <li v-for="(bbb,key) in escolhida['.value']" :key="key">
+            <li v-for="(bbb,key) in escolhida" :key="key">
               <div class="inside-li" v-on:click="escolheParticipante(bbb)">
                 <img :src="'img/fotos/'+bbb.foto+'.jpg'" :class="[{ativo:isAtivo(bbb)}]"/>
                 <br/><p>{{bbb.nome}}</p>

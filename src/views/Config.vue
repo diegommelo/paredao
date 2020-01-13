@@ -27,7 +27,7 @@
               <li v-for="n in total_participantes">
                 <div>
                   <img src="img/icons/robo.jpg" /><br/>
-                  <span>&nbsp</span>
+                  <span>(BBB X)</span>
                 </div>
               </li>
             </ul>   
@@ -56,8 +56,8 @@ export default {
   name: 'Config',
   data: function() {
     return {
-      edicoes: {},
-      edicaoSalva: {},
+      edicoes: [],
+      edicaoSalva: [],
       participantes: [],
       total_participantes:14,
       edicoes_escolhidas:[]
@@ -66,7 +66,7 @@ export default {
   methods: {
     carregaEdicao: function(edicaoescolhida){
       let el = this
-      this.$modal.open({
+      this.$buefy.modal.open({
         parent: this,
         component: edicoes,
         props: {
@@ -80,7 +80,7 @@ export default {
             })
             if(el.participantes.length == 14){
               if(hasBBB == -1){
-                el.$toast.open({
+                el.$buefy.toast.open({
                   duration: 2000,
                   message: 'Edição completa',
                   position: 'is-bottom',
@@ -112,7 +112,7 @@ export default {
       let router = this.$router
       let el = this
       if(this.participantes.length < 14) {
-        this.$toast.open({
+        this.$buefy.toast.open({
           duration:2000,
           message: 'Faltam participantes',
           position:'is-bottom',
@@ -120,13 +120,13 @@ export default {
         })
       } else {
         this.$firebaseRefs.edicaoSalva.push({
-          participantes: this.participantes,
-          edicoes_escolhidas:_.uniq(this.edicoes_escolhidas),
+          participantes: el.participantes,
+          edicoes_escolhidas:_.uniq(el.edicoes_escolhidas),
           criado_por:"",
           created_at:Date(Date.now())
         }).then(function(docRef){
           console.log(docRef.key)
-          el.$modal.open({
+          el.$buefy.modal.open({
             parent: el,
             component: confirmaedicao,
             props: {
@@ -150,18 +150,8 @@ export default {
     }
   },
   firebase: {
-    edicoes: {
-      source: db.ref('edicoes'),
-      cancelCallback(err){
-        console.error(err);
-      }
-    },
-    edicaoSalva: {
-      source: db.ref('personalizado').limitToFirst(1),
-      cancelCallback(err){
-        console.error(err)
-      }
-    }
+    edicoes: db.ref('edicoes'),
+    edicaoSalva: db.ref('personalizado').limitToFirst(1)
   },  
   components: {
     edicoes,

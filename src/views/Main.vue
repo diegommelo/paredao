@@ -170,7 +170,8 @@ export default {
       shareId:"",
       paredaoCarregado:{},
       isLoading: true,
-      isFullPage: true
+      isFullPage: true,
+      edicoesSalvas:[]
     }
   },  
   methods: {
@@ -221,7 +222,7 @@ export default {
       if(this.edicoes_escolhidas.length>0){
       	let el = this
       	_.forEach(edicoes,function(edicao){
-        	_.forEach(el.edicoesSalvas[edicao-1]['.value'],function(val){
+        	_.forEach(el.edicoesSalvas[edicao-1],function(val){
           	el.bbbs.push(val)
           })
         })
@@ -236,7 +237,7 @@ export default {
       	this.sorteiaParedao()
       	this.carregando= true        
         } else {
-          this.$toast.open({
+          this.$buefy.toast.open({
               duration: 2000,
               message: 'Selecione pelo menos uma edição',
               position: 'is-bottom',
@@ -268,38 +269,38 @@ export default {
           historico:this.historico,
           created_at:Date(Date.now())
         }).then(function(docRef){
-          router.push({name:'paredao',params:{resultado:docRef.key}})
+          router.push({name:'resultado',params:{paredaoId:docRef.key}})
         })
     },
     carregaParedao: function(paredaoId,tipo){
       let el = this
       if(tipo==2){
-        this.$bindAsObject('edicaoCarregada', db.ref('personalizado').child(paredaoId), null, () => {
-          this.start = false
-          this.edicoes_escolhidas = this.edicaoCarregada.edicoes_escolhidas
-          this.sorteados = this.edicaoCarregada.participantes
-          this.restantes = this.edicaoCarregada.participantes.slice()
+        this.$rtdbBind('edicaoCarregada', db.ref('personalizado').child(paredaoId)).then(edicaoCarregada=>{
+          el.start = false
+          el.edicoes_escolhidas = this.edicaoCarregada.edicoes_escolhidas
+          el.sorteados = this.edicaoCarregada.participantes
+          el.restantes = this.edicaoCarregada.participantes.slice()
           el.sorteiaParedao()
-          this.isLoading = false
+          el.isLoading = false
         })
       } else {
-        this.$bindAsObject('paredaoCarregado', db.ref('paredoes').child(paredaoId), null, () => {
-          this.start = false        
-          this.sorteados = this.paredaoCarregado.sorteados
-          this.edicoes_escolhidas = this.paredaoCarregado.edicoes_escolhidas
-          this.historico = this.paredaoCarregado.historico
-          this.campeao = this.paredaoCarregado.campeao
-          this.restantes = this.paredaoCarregado.sorteados
+        let el = this
+        this.$rtdbBind('paredaoCarregado', db.ref('paredoes').child(paredaoId)).then(paredaoCarregado=>{
+          el.start = false    
+          el.sorteados = this.paredaoCarregado.sorteados
+          el.edicoes_escolhidas = this.paredaoCarregado.edicoes_escolhidas
+          el.historico = this.paredaoCarregado.historico
+          el.campeao = this.paredaoCarregado.campeao
+          el.restantes = this.paredaoCarregado.sorteados
           //this.paredao = this.paredaoCarregado.historico[0]
-          this.shareId = this.paredaoCarregado['.key']
-          this.isLoading = false
+          el.shareId = this.paredaoCarregado['.key']
+          el.isLoading = false
         })
       }
     }
   },
   created: function(){
     console.log('created')
-    console.log(this.$route)
     if(!this.$route.params.paredaoId){
       this.start = true
       this.isLoading = false
@@ -313,12 +314,13 @@ export default {
 	},    
 	watch: {
 	  '$route' (to,from) {
-	    console.log('watch')
-	    if(to.query.resultado==undefined) {
+      console.log('watch')
+      console.log(to)
+	    if(to.params.paredaoId==undefined) {
 	      this.start = true
         this.isLoading = false
 	    } else {
-	      this.carregaParedao(to.query.resultado)
+	      this.carregaParedao(to.params.paredaoId)
 	    }
 	  },
 	  'paredaoCarregado' () {
@@ -328,7 +330,7 @@ export default {
 	      this.paredao = []
 	      this.sorteados = []
 	      this.edicoes_escolhidas = []
-        this.$toast.open({
+        this.$$buefy.toast.open({
             duration: 2000,
             message: 'Paredão não encontrado',
             position: 'is-bottom',

@@ -37,13 +37,13 @@ export default {
   props: ['edicaoId'],
   data: function(){
     return {
-      url_share: "https://geradordeparedao.com.br/?especial="+this.edicaoId
+      url_share: "https://geradordeparedao.com.br/especial/"+this.edicaoId
     }
   },
   methods: {
     copiarUrl: function(){
       document.execCommand("copy");
-      this.$toast.open({
+      this.$buefy.toast.open({
         duration:1500,
         message: 'Url Copiada',
         type:"is-info",
@@ -55,7 +55,7 @@ export default {
       if(para=="home"){
         this.$router.push('/')
       } else if(para="paredao"){
-        this.$router.push({name:'paredao',query:{"especial":urlId}});
+        this.$router.push({name:'especial',params:{paredaoId:urlId}});
       }
     }
   }

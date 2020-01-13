@@ -4,12 +4,12 @@ import router from './router'
 import Buefy from 'buefy'
 import VueLodash from 'vue-lodash'
 import VueCarousel from 'vue-carousel'
-import VueFire from 'vuefire'
+import {rtdbPlugin} from 'vuefire'
 import 'buefy/dist/buefy.css'
 import './registerServiceWorker'
 
 Vue.config.productionTip = false
-Vue.use(VueFire)
+Vue.use(rtdbPlugin)
 Vue.use(Buefy, VueLodash, VueCarousel)
 
 
