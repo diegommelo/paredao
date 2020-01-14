@@ -73,7 +73,7 @@
                     <i class="fas fa-square fa-stack-2x twitter"></i>
                     <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
                   </a>
-                  <a class="fa-stack fa-1x" :href="'https://www.facebook.com/sharer/sharer.php?u=Veja o resultado do meu Gerador de Paredão do BBB!'+url_share+shareId" target="_blank">
+                  <a class="fa-stack fa-1x" :href="'https://www.facebook.com/sharer/sharer.php?u='+url_share+shareId" target="_blank">
                     <i class="fas fa-square fa-stack-2x facebook"></i>
                     <i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i>
                   </a>
