@@ -56,7 +56,7 @@
                 </div>
               </div>
               <div class="animated columns card-campeao" v-show="campeao.length>0" :class="{'bounceIn':campeao.length>0}">
-                <div class="column box is-three-fifths is-offset-one-fifth" v-if='campeao.length>0'>
+                <div class="column is-three-fifths is-offset-one-fifth" v-if='campeao.length>0'>
                     <h1 class="title titulo-paredao has-text-warning"><i class="fas fa-trophy"></i> Campeão <i class="fas fa-trophy"></i></h1>
                     <figure class="avatar">
                       <img :src="'/img/fotos/'+campeao[0].foto+'.jpg'" /> 
@@ -66,6 +66,25 @@
                       <small>(BBB {{campeao[0].edicao}})</small>        
                     </div>
                   </div>
+              </div>
+              <div v-show="campeao.length>0" :class="['compartilhe',{'bounceIn':campeao.length>0}]">
+                <p>Compartilhe:</p>
+                <div class="redes-sociais">
+                  <a class="fa-stack fa-1x" :href="'https://twitter.com/intent/tweet?text=Veja o resultado do meu Gerador de Paredão do BBB!&url='+url_share+shareId" target="_blank">
+                    <i class="fas fa-square fa-stack-2x twitter"></i>
+                    <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+                  </a>
+                  <a class="fa-stack fa-1x" :href="'https://www.facebook.com/sharer/sharer.php?u=Veja o resultado do meu Gerador de Paredão do BBB!'+url_share+shareId" target="_blank">
+                    <i class="fas fa-square fa-stack-2x facebook"></i>
+                    <i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i>
+                  </a>
+                  <a class="fa-stack fa-1x" :href="'https://api.whatsapp.com/send?text=Veja o resultado do meu Gerador de Paredão do BBB! '+url_share+shareId">
+                    <i class="fas fa-square fa-stack-2x whatsapp"></i>
+                    <i class="fab fa-whatsapp fa-stack-1x fa-inverse"></i>
+                  </a>                              
+                </div>                
+                 <!-- <b-input v-model="url_share" icon-pack="far" type="copy" @focus="$event.target.select(); copiarUrl();" ref="urlshare" readonly></b-input>                 -->
+                <hr class="divisor"></hr>              
               </div>
               <div v-show="campeao.length>0" class="historico" :class="{'bounceIn':campeao.length>0}">
                 <h4 class="title is-5 sombra-texto" v-if="campeao.length>0">Histórico de Paredões</h4>
@@ -118,7 +137,7 @@
                   <div class="column">
                     <ul class="animated faster">
                       <h5 class="participantes-titulo sombra-texto">Edições</h5>
-                      <li v-for="edicao in edicoes_escolhidas">
+                      <li v-for="edicao in edicoes_escolhidas" :key="edicao">
                         <span class="tag is-blue"><i class=" fas fa-check"></i>BBB {{edicao}}</span>
                       </li>
                     </ul>
@@ -171,7 +190,8 @@ export default {
       paredaoCarregado:{},
       isLoading: true,
       isFullPage: true,
-      edicoesSalvas:[]
+      edicoesSalvas:[],
+      url_share:'https://paredao.diegomelo.com/resultado/'
     }
   },  
   head: {
@@ -195,6 +215,15 @@ export default {
     ]
   },
   methods: {
+    copiarUrl: function(){
+      document.execCommand("copy");
+      this.$buefy.toast.open({
+        duration:1500,
+        message: 'Url Copiada',
+        type:"is-info",
+        position:"is-bottom"
+      })
+    },    
   	sorteiaParedao: function(){
     	let el = this
       setTimeout(function(){ el.paredao=_.sampleSize(el.restantes,2);el.showcard1=true;el.showcard2=true}, 300);
@@ -343,13 +372,13 @@ export default {
 	    }
 	  },
 	  'paredaoCarregado' () {
-	    if(this.paredaoCarregado.hasOwnProperty('.value')) {
-	      // console.log('ue')
+	    if(_.isEmpty(this.paredaoCarregado)) {
+	      //console.log('ue')
 	      this.campeao = []
 	      this.paredao = []
 	      this.sorteados = []
 	      this.edicoes_escolhidas = []
-        this.$$buefy.toast.open({
+        this.$buefy.toast.open({
             duration: 2000,
             message: 'Paredão não encontrado',
             position: 'is-bottom',
@@ -529,6 +558,7 @@ export default {
   }
   .conteudo-card-paredao{
     padding:5px;
+    font-size:1.2rem;
   }
   .mini-avatar{
     width:45px;
@@ -574,5 +604,17 @@ export default {
     margin-top:5px;
     font-size:0.6rem;
     color:#C0D6DF;
-  } 
+  }
+  .redes-sociais a{
+    margin:0 5px;
+  }
+  .facebook {
+    color:#3b5998 !important;
+  }
+  .twitter {
+    color:#1da1f2  
+  }
+  .whatsapp {
+    color:#25D366;
+  }   
 </style>

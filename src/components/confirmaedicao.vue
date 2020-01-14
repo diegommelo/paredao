@@ -6,7 +6,7 @@
           <i class="fas fa-check-circle fa-stack-2x confirm fa-inverse"></i>
         </a>  
         <p>Compartilhe com seus amigos enviando o link abaixo:</p>
-        <b-input v-model="url_share" icon-pack="far" type="copy" @focus="$event.target.select(); copiarUrl();" ref="urlshare"></b-input>
+        <b-input v-model="url_share" icon-pack="far" type="copy" @focus="$event.target.select(); copiarUrl();" ref="urlshare" readonly></b-input>
 <!--         <p>Ou postando em suas redes sociais:</p>
         <div class="redes-sociais">
           <a class="fa-stack fa-2x">
@@ -37,7 +37,7 @@ export default {
   props: ['edicaoId'],
   data: function(){
     return {
-      url_share: "https://geradordeparedao.diegomelo.com/especial/"+this.edicaoId
+      url_share: "https://paredao.diegomelo.com/especial/"+this.edicaoId
     }
   },
   methods: {
