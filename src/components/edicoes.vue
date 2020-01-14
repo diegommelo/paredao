@@ -7,7 +7,7 @@
             <h5 class="participantes-titulo sombra-texto">Escolha os participantes do BBB {{parseInt(escolhida['.key'])+1}}</h5>
             <li v-for="(bbb,key) in escolhida" :key="key">
               <div class="inside-li" v-on:click="escolheParticipante(bbb)">
-                <v-lazy-image :src="'img/fotos/'+bbb.foto+'.jpg'" src-placeholder="img/icons/robo.jpg" :class="[{ativo:isAtivo(bbb)}]" />
+                <v-lazy-image :src="'img/fotos/'+bbb.foto+'.jpg'" :class="[{ativo:isAtivo(bbb)}]" />
                 <!-- <img :src="'img/fotos/'+bbb.foto+'.jpg'" :class="[{ativo:isAtivo(bbb)}]"/> -->
                 <br/><p>{{bbb.nome}}</p>
               </div>
@@ -41,7 +41,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  @media (min-width: 1281px) {
+  @media (min-width: 769px) {
     .participantes img {
       border:6px solid #000;
       width:90px;

@@ -17,7 +17,6 @@
                     </div>
                   </li>
               </ul>
-              <br/>
               <div class="play-button">
                 <a class="button is-dark is-medium" v-on:click="comecaParedao(edicoes_escolhidas,participantes)"><i class="fas fa-magic" :class="{'fa-spin':carregando}"></i><span> Gerar Paredão</span></a> 
                 <router-link to="personalizar" class="button is-dark is-medium"><i class="fas fa-cog" :class="{'fa-spin':carregando}"></i>Criar o seu</router-link>
@@ -431,6 +430,9 @@ export default {
   }
   .hero-body {
     padding: 2rem 1.5rem !important;
+  }
+  .play-button {
+    margin-top:20px;
   }
   .play-button a{
     margin: 0 15px;

@@ -171,7 +171,7 @@ export default {
 }
 </script>
 <style scoped>
-  @media (min-width: 1281px) {
+  @media (min-width: 769px) {
     .participantes-escolhidos img {
       width:90px;
       height:90px;
