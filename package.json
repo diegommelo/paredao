@@ -17,7 +17,6 @@
     "vue-analytics": "^5.22.1",
     "vue-carousel": "^0.18.0",
     "vue-cli": "^2.9.6",
-    "vue-head": "^2.2.0",
     "vue-images-loaded": "^1.1.2",
     "vue-lodash": "^2.0.2",
     "vue-router": "^3.1.3",

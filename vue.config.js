@@ -4,5 +4,10 @@ module.exports = {
         disableHostCheck: true
     },
 
-    productionSourceMap: false
+    productionSourceMap: false,
+
+    pwa: {
+      themeColor: '#4A90E2',
+      msTileColor: '#4A90E2'
+    }
 }

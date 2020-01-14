@@ -203,7 +203,7 @@ export default {
     padding-bottom:15px;
   }
   .participantes-escolhidos img {
-    border:6px solid #0178BC;
+    border:4px solid #0178BC;
     border-radius:100px;
   }
   .lista-edicoes {

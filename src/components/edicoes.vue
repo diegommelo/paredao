@@ -50,6 +50,9 @@ export default {
    .participantes ul li {
       min-height: 152px;
     }    
+    .ativo {
+      border: 6px solid #0178BC !important;
+    }    
 /*     .participantes ul li:hover img {
       border: 6px solid #0178BC;
       -webkit-border-radius: 10px;
@@ -66,6 +69,9 @@ export default {
     .participantes ul li {
       min-height: 132px;
     }
+      .ativo {
+    border: 3px solid #0178BC !important;
+  }
 /*     .participantes ul li:hover img {
       border: 2px solid #0178BC;
       -webkit-border-radius: 10px;
@@ -96,9 +102,7 @@ export default {
   .participantes img {
     border-radius:100px;
   }
-  .ativo {
-    border: 6px solid #0178BC !important;
-  }
+
     .v-lazy-image {
   filter: blur(3px);
   transition: filter 0.7s;

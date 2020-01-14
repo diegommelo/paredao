@@ -193,27 +193,6 @@ export default {
       edicoesSalvas:[],
       url_share:'https://paredao.diegomelo.com/resultado/'
     }
-  },  
-  head: {
-    title: {
-      inner:'Gerador de Paredão do BBB',
-      separator:' ',
-      complement:' '
-    },
-    meta: [
-      {name:'title', content:'Gerador de Paredão do BBB'},
-      {name:'application-name', content:'Gerador de Paredão do BBB'},
-      {name:'descrition', content:'Crie sua própria edição do Big Brother Brasil!'},
-      //twitter
-      {name:'twitter:title', content:'Gerador de Paredão do BBB'},
-      {name:'twitter:description', content:'Crise sua própria edição do Big Brother Brasil!'},
-      {name:'twitter:image', content:'https://paredao.diegomelo.com/img/icons/robo.jpg'},
-      //facebook
-      {property:'og:title', content:'Gerador de Paredão do BBB'},
-      {property:'og:type', content:'website'},
-      {property:'og:image', content:'https://paredao.diegomelo.com/img/icons/robo.jpg'},
-      {property:'og:url',content:'https://paredao.diegomelo.com'}
-    ]
   },
   methods: {
     copiarUrl: function(){
@@ -330,7 +309,9 @@ export default {
       if(tipo==2){
         this.$rtdbBind('edicaoCarregada', db.ref('personalizado').child(paredaoId)).then(edicaoCarregada=>{
           el.start = false
-          el.edicoes_escolhidas = this.edicaoCarregada.edicoes_escolhidas
+          el.edicoes_escolhidas = this.edicaoCarregada.edicoes_escolhidas.sort(function(a,b){
+            return a - b
+          })
           el.sorteados = this.edicaoCarregada.participantes
           el.restantes = this.edicaoCarregada.participantes.slice()
           el.sorteiaParedao()
@@ -341,7 +322,9 @@ export default {
         this.$rtdbBind('paredaoCarregado', db.ref('paredoes').child(paredaoId)).then(paredaoCarregado=>{
           el.start = false    
           el.sorteados = this.paredaoCarregado.sorteados
-          el.edicoes_escolhidas = this.paredaoCarregado.edicoes_escolhidas
+          el.edicoes_escolhidas = this.paredaoCarregado.edicoes_escolhidas.sort(function(a,b){
+            return a-b
+          })
           el.historico = this.paredaoCarregado.historico
           el.campeao = this.paredaoCarregado.campeao
           el.restantes = this.paredaoCarregado.sorteados
@@ -413,6 +396,10 @@ export default {
     }
     .play-button a {
       margin: 10px 0 !important;
+    }
+    .play-button {
+      max-width: 250px;
+      margin: 0 auto;
     }
   }
   @media (max-width:320px) {
