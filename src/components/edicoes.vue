@@ -1,7 +1,7 @@
 <template>
   <div>
     <section class="is-info is-bold is-fullheight">
-      <div class="hero-body">
+      <div class="">
         <div class="participantes">
           <ul>
             <h5 class="participantes-titulo sombra-texto">Escolha os participantes do BBB {{parseInt(escolhida['.key'])+1}}</h5>
@@ -47,6 +47,9 @@ export default {
       width:90px;
       height:90px;
     }
+   .participantes ul li {
+      min-height: 152px;
+    }    
 /*     .participantes ul li:hover img {
       border: 6px solid #0178BC;
       -webkit-border-radius: 10px;
@@ -54,11 +57,14 @@ export default {
       border-radius: 100px;    
     }       */
   }  
-  @media (max-width:480px) {
+  @media (max-width:768px) {
     .participantes img {
       border:2px solid #000;
       width:60px;
       height:60px;      
+    }
+    .participantes ul li {
+      min-height: 132px;
     }
 /*     .participantes ul li:hover img {
       border: 2px solid #0178BC;
@@ -80,7 +86,6 @@ export default {
   }
   .participantes ul li {
     text-align: center;
-    min-height: 152px;
     vertical-align: middle;
     padding-bottom:10px;
   }

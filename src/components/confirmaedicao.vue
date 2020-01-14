@@ -23,8 +23,8 @@
           </a>                              
         </div> -->
         <div class="edicao-buttons">
-          <a class="button is-dark" @click="fechaConfirm('paredao',edicaoId)"><i class="far fa-eye"></i> <span>Espiar edição</span></a>
-          <a class="button is-dark" @click="fechaConfirm('home',edicaoId)"><i class="fas fa-redo"></i> <span>Novo paredão</span></a>
+          <a class="button is-dark" @click="fechaConfirm('paredao',edicaoId)"><i class="far fa-eye"></i> <span>Ver paredão</span></a>
+          <a class="button is-dark" @click="fechaConfirm('home',edicaoId)"><i class="fas fa-redo"></i> <span>Criar outro</span></a>
 <!--           <router-link class="button is-dark" to="/" @click="this.$parent.close"><i class="fas fa-redo"></i><span> Novo paredão</span></router-link>
  -->        </div>
       </div>

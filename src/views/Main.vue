@@ -20,7 +20,7 @@
               <br/>
               <div class="play-button">
                 <a class="button is-dark is-medium" v-on:click="comecaParedao(edicoes_escolhidas,participantes)"><i class="fas fa-magic" :class="{'fa-spin':carregando}"></i><span> Gerar Paredão</span></a> 
-                <router-link to="personalizar" class="button is-dark is-medium"><i class="fas fa-cog" :class="{'fa-spin':carregando}"></i>Personalizar</router-link>
+                <router-link to="personalizar" class="button is-dark is-medium"><i class="fas fa-cog" :class="{'fa-spin':carregando}"></i>Criar o seu</router-link>
               </div>
           </div>
           <div v-show="!start" class="conteudo animated faster slideInLeft">
@@ -48,7 +48,7 @@
                           <img :src="'/img/fotos/'+paredao[1].foto+'.jpg'" /> 
                         </figure> 
                         <div class="conteudo-card-paredao">
-                          <h4><strong>{{paredao[1].nome}}</strong></h4>
+                          <p><strong>{{paredao[1].nome}}</strong></p>
                           <small>(BBB {{paredao[1].edicao}})</small>        
                         </div>
                     </div>
@@ -57,7 +57,7 @@
               </div>
               <div class="animated columns card-campeao" v-show="campeao.length>0" :class="{'bounceIn':campeao.length>0}">
                 <div class="column is-three-fifths is-offset-one-fifth" v-if='campeao.length>0'>
-                    <h1 class="title titulo-paredao has-text-warning"><i class="fas fa-trophy"></i> Campeão <i class="fas fa-trophy"></i></h1>
+                    <h1 class="title titulo-paredao titulo-campeao has-text-warning"><i class="fas fa-trophy"></i> Campeão <i class="fas fa-trophy"></i></h1>
                     <figure class="avatar">
                       <img :src="'/img/fotos/'+campeao[0].foto+'.jpg'" /> 
                     </figure> 
@@ -136,7 +136,7 @@
                   </div>
                   <div class="column">
                     <ul class="animated faster">
-                      <h5 class="participantes-titulo sombra-texto">Edições</h5>
+                      <h5 class="participantes-titulo sombra-texto">Edições Escolhidas</h5>
                       <li v-for="edicao in edicoes_escolhidas" :key="edicao">
                         <span class="tag is-blue"><i class=" fas fa-check"></i>BBB {{edicao}}</span>
                       </li>
@@ -144,7 +144,7 @@
                   </div>                
                 </div>
               </div>
-              <a v-if="!start" class="button is-dark" v-on:click="resetaParedao">
+              <a v-if="!start" class="button is-dark" href="/">
                 <i class="fas fa-redo"></i><span> Novo Paredão</span>
               </a>                
           </div>
@@ -201,17 +201,18 @@ export default {
       complement:' '
     },
     meta: [
+      {name:'title', content:'Gerador de Paredão do BBB'},
       {name:'application-name', content:'Gerador de Paredão do BBB'},
       {name:'descrition', content:'Crie sua própria edição do Big Brother Brasil!'},
       //twitter
       {name:'twitter:title', content:'Gerador de Paredão do BBB'},
       {name:'twitter:description', content:'Crise sua própria edição do Big Brother Brasil!'},
-      {name:'twitter:image', content:'https://geradordeparedao.diegomelo.com/img/icons/robo.jpg'},
+      {name:'twitter:image', content:'https://paredao.diegomelo.com/img/icons/robo.jpg'},
       //facebook
       {property:'og:title', content:'Gerador de Paredão do BBB'},
       {property:'og:type', content:'website'},
-      {property:'og:image', content:'https://geradordeparedao.diegomelo.com/img/icons/robo.jpg'},
-      {property:'og:url',content:'https://geradordeparedao.diegomelo.com'}
+      {property:'og:image', content:'https://paredao.diegomelo.com/img/icons/robo.jpg'},
+      {property:'og:url',content:'https://paredao.diegomelo.com'}
     ]
   },
   methods: {
@@ -269,7 +270,8 @@ export default {
     },
     comecaParedao: function(edicoes,participantes){
       if(this.edicoes_escolhidas.length>0){
-      	let el = this
+        let el = this
+        this.edicoes_escolhidas.sort(function(a,b){return a-b})
       	_.forEach(edicoes,function(edicao){
         	_.forEach(el.edicoesSalvas[edicao-1],function(val){
           	el.bbbs.push(val)
@@ -306,6 +308,7 @@ export default {
       this.historico=[]
       this.edicoes_escolhidas=[]
       this.paredao=[]
+      this.shareId=""
       this.start = true
       this.$router.push({name:'paredao'})
     },
@@ -319,6 +322,7 @@ export default {
           created_at:Date(Date.now())
         }).then(function(docRef){
           router.push({name:'resultado',params:{paredaoId:docRef.key}})
+          scrollTo(0,0)
         })
     },
     carregaParedao: function(paredaoId,tipo){
@@ -349,7 +353,7 @@ export default {
     }
   },
   created: function(){
-    // console.log('created')
+    //console.log('created')
     if(!this.$route.params.paredaoId){
       this.start = true
       this.isLoading = false
@@ -363,7 +367,7 @@ export default {
 	},    
 	watch: {
 	  '$route' (to,from) {
-      // console.log('watch')
+      //console.log('watch')
 	    if(to.params.paredaoId==undefined) {
 	      this.start = true
         this.isLoading = false
@@ -374,17 +378,14 @@ export default {
 	  'paredaoCarregado' () {
 	    if(_.isEmpty(this.paredaoCarregado)) {
 	      //console.log('ue')
-	      this.campeao = []
-	      this.paredao = []
-	      this.sorteados = []
-	      this.edicoes_escolhidas = []
+        this.resetaParedao()
         this.$buefy.toast.open({
             duration: 2000,
             message: 'Paredão não encontrado',
             position: 'is-bottom',
             type: 'is-danger'
         }) 	      
-        this.$router.push({name:'paredao'})
+       //this.$router.push({name:'paredao'})
 	    }
 	  }
 	},
@@ -511,6 +512,9 @@ export default {
   .titulo-paredao{
     color:#4a4a4a !important;
   }
+  .titulo-campeao {
+    color:#c0ca33 !important;
+  }
   .divisor {
     max-width:100px;
     margin:40px auto;
@@ -539,8 +543,8 @@ export default {
   .historico {
     margin-top:40px;
   }
-  .historico h4 {
-    color:#fff;
+  .historico h4.title {
+    color:#cfd8dc;
   }
   .historico h3 {
     padding:10px 0 10px 0;
@@ -560,6 +564,10 @@ export default {
     padding:5px;
     font-size:1.2rem;
   }
+  .conteudo-card-paredao p strong {
+    color:#19386b !important;
+  }
+
   .mini-avatar{
     width:45px;
     background-size:cover;

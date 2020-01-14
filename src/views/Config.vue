@@ -24,7 +24,7 @@
                   <v-lazy-image :src="'img/fotos/'+bbb.foto+'.jpg'" src-placeholder="img/icons/robo.jpg" />
                   <!-- <img :src="'img/fotos/'+bbb.foto+'.jpg'"/> -->
                   <br/>
-                  <span>(BBB {{bbb.edicao}})</span>
+                  <span class="edicao-bbb">(BBB {{bbb.edicao}})</span>
                 </div>
               </li>              
               <li v-for="n in total_participantes" class="robo">
@@ -77,6 +77,7 @@ export default {
           "escolhida":this.edicoes[edicaoescolhida],
           "participantes":this.participantes
         },
+        width:750,
         events: {
           escolheBBB: function(event){
             let hasBBB = _.findIndex(el.participantes, function(o){
@@ -175,8 +176,12 @@ export default {
       width:90px;
       height:90px;
     }
+    .robo {
+      min-height:130px;
+      vertical-align: top;
+    }    
   }  
-  @media (max-width:480px) {
+  @media (max-width:768px) {
     .participantes-escolhidos img {
       width:60px;
       height:60px;      
@@ -184,6 +189,10 @@ export default {
     .edicao-buttons a {
       margin:8px 10px !important;
     }
+    .robo {
+      min-height:95px;
+      vertical-align: top;
+    }    
   }
   .edicoes {
     max-width:620px;
@@ -219,9 +228,8 @@ export default {
   .btnLimpar{
     margin-top:20px;
   }
-  .robo {
-    min-height:130px;
-    vertical-align: top;
+  .edicao-bbb {
+    font-size:0.9rem;
   }
   .v-lazy-image {
   filter: blur(3px);

@@ -15,7 +15,7 @@ html {
 }
 body {
   font-family: 'Fira Sans', sans-serif !important;  
-  color:#fff !important;
+  color:#cfd8dc !important;
 }
 #app {
   text-align:center;
